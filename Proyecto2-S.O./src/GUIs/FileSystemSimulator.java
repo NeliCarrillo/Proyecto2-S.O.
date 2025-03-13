@@ -9,12 +9,25 @@ package GUIs;
  * @author nelsoncarrillo
  */
 public class FileSystemSimulator extends javax.swing.JFrame {
+    
+    private String mode="Administrador";
+
+    public String getMode() {
+        return mode;
+    }
+
+    public void setMode(String mode) {
+        this.mode = mode;
+    }
 
     /**
      * Creates new form Dos
      */
     public FileSystemSimulator() {
         initComponents();
+        this.setVisible(true);
+        this.setLocationRelativeTo(null);
+        this.setResizable(false);
     }
 
     /**
@@ -111,6 +124,10 @@ public class FileSystemSimulator extends javax.swing.JFrame {
         jPanel57 = new javax.swing.JPanel();
         jPanel70 = new javax.swing.JPanel();
         jPanel76 = new javax.swing.JPanel();
+        createFile = new javax.swing.JButton();
+        createDir = new javax.swing.JButton();
+        change = new javax.swing.JButton();
+        modo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -135,7 +152,7 @@ public class FileSystemSimulator extends javax.swing.JFrame {
         ));
         jScrollPane2.setViewportView(jTable1);
 
-        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 328, 380, 330));
+        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 328, 380, 310));
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setForeground(new java.awt.Color(255, 255, 255));
@@ -1345,6 +1362,23 @@ public class FileSystemSimulator extends javax.swing.JFrame {
 
         jPanel1.add(jPanel76, new org.netbeans.lib.awtextra.AbsoluteConstraints(1210, 490, 70, 67));
 
+        createFile.setText("Crear Archivo");
+        jPanel1.add(createFile, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 650, 120, -1));
+
+        createDir.setText("Crear Directorio");
+        jPanel1.add(createDir, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 650, -1, -1));
+
+        change.setText("Cambiar de Modo");
+        change.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                changeActionPerformed(evt);
+            }
+        });
+        jPanel1.add(change, new org.netbeans.lib.awtextra.AbsoluteConstraints(395, 650, 140, -1));
+
+        modo.setText("Actual: Administrador");
+        jPanel1.add(modo, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 680, -1, -1));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -1353,11 +1387,26 @@ public class FileSystemSimulator extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 661, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 730, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void changeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeActionPerformed
+        // TODO add your handling code here:
+        if(this.mode=="Administrador"){
+            this.setMode("Usuario");
+            this.createDir.setVisible(false);
+            this.createFile.setVisible(false);
+            this.modo.setText("Actual: Usuario");
+        }else{
+            this.setMode("Administrador");
+            this.createDir.setVisible(true);
+            this.createFile.setVisible(true);
+            this.modo.setText("Actual: Administrador");
+        }
+    }//GEN-LAST:event_changeActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1396,6 +1445,9 @@ public class FileSystemSimulator extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton change;
+    private javax.swing.JButton createDir;
+    private javax.swing.JButton createFile;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel11;
@@ -1481,5 +1533,6 @@ public class FileSystemSimulator extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
     private javax.swing.JTree jTree1;
+    private javax.swing.JLabel modo;
     // End of variables declaration//GEN-END:variables
 }
