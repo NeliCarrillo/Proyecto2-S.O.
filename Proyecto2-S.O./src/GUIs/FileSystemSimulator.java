@@ -4,13 +4,19 @@
  */
 package GUIs;
 
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+
 /**
  *
  * @author nelsoncarrillo
  */
 public class FileSystemSimulator extends javax.swing.JFrame {
     
+    
     private String mode="Administrador";
+    private DefaultTreeModel model;
+
 
     public String getMode() {
         return mode;
@@ -28,8 +34,20 @@ public class FileSystemSimulator extends javax.swing.JFrame {
         this.setVisible(true);
         this.setLocationRelativeTo(null);
         this.setResizable(false);
+        Load();
     }
-
+    
+    DefaultMutableTreeNode courses = new DefaultMutableTreeNode ("FileSystem");
+    public void Load(){
+        //DefaultMutableTreeNode designNode = new DefaultMutableTreeNode ("Graphic Designing") ;
+        //designNode.add(new DefaultMutableTreeNode("Photoshop"));
+        //courses.add(designNode);
+        model = (DefaultTreeModel)Tree.getModel();
+        model.setRoot(courses);
+        Tree.setModel(model);
+    }
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -40,8 +58,6 @@ public class FileSystemSimulator extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTree1 = new javax.swing.JTree();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
@@ -128,15 +144,12 @@ public class FileSystemSimulator extends javax.swing.JFrame {
         createDir = new javax.swing.JButton();
         change = new javax.swing.JButton();
         modo = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        Tree = new javax.swing.JTree();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jTree1.setBackground(new java.awt.Color(204, 255, 255));
-        jScrollPane1.setViewportView(jTree1);
-
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 380, 330));
 
         jTable1.setBackground(new java.awt.Color(204, 255, 255));
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -1363,6 +1376,11 @@ public class FileSystemSimulator extends javax.swing.JFrame {
         jPanel1.add(jPanel76, new org.netbeans.lib.awtextra.AbsoluteConstraints(1210, 490, 70, 67));
 
         createFile.setText("Crear Archivo");
+        createFile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                createFileActionPerformed(evt);
+            }
+        });
         jPanel1.add(createFile, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 650, 120, -1));
 
         createDir.setText("Crear Directorio");
@@ -1378,6 +1396,12 @@ public class FileSystemSimulator extends javax.swing.JFrame {
 
         modo.setText("Actual: Administrador");
         jPanel1.add(modo, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 680, -1, -1));
+
+        javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("root");
+        Tree.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
+        jScrollPane3.setViewportView(Tree);
+
+        jPanel1.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 380, 330));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -1407,6 +1431,10 @@ public class FileSystemSimulator extends javax.swing.JFrame {
             this.modo.setText("Actual: Administrador");
         }
     }//GEN-LAST:event_changeActionPerformed
+
+    private void createFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createFileActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_createFileActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1445,6 +1473,7 @@ public class FileSystemSimulator extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTree Tree;
     private javax.swing.JButton change;
     private javax.swing.JButton createDir;
     private javax.swing.JButton createFile;
@@ -1529,10 +1558,9 @@ public class FileSystemSimulator extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel80;
     private javax.swing.JPanel jPanel81;
     private javax.swing.JPanel jPanel9;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTree jTree1;
     private javax.swing.JLabel modo;
     // End of variables declaration//GEN-END:variables
 }
