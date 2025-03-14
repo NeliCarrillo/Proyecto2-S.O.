@@ -61,9 +61,10 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
     * @param nombreArchivo El nombre del archivo que se añadirá como hoja.
     * @return true si el archivo se añadió correctamente, false si ya existe un hijo con el mismo nombre.
     */
-   public boolean anadirArchivo(String nombrePadre, String nombreArchivo) {
+   public boolean anadirArchivoJTree(String nombrePadre, String nombreArchivo) {
+       this.eliminarArchivoJTree("");
        DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
-       DefaultMutableTreeNode parentNode = findNode(root, nombrePadre);
+       DefaultMutableTreeNode parentNode = findNodeJTree(root, nombrePadre);
 
        if (parentNode != null) {
            // Verificar si ya existe un hijo con el mismo nombre
@@ -87,6 +88,59 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
            return false; // Nodo padre no existe
        }
    }
+   /**
+    * Método para añadir un nuevo directorio (nodo) con un hijo predeterminado vacío.
+    *
+    * @param nombrePadre El nombre del nodo padre al que se añadirá el nuevo directorio.
+    * @param nombreDirectorio El nombre del nuevo directorio que se añadirá.
+    */
+   public void anadirDirectorio(String nombrePadre, String nombreDirectorio) {
+       DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
+       DefaultMutableTreeNode parentNode = findNodeJTree(root, nombrePadre);
+
+       if (parentNode != null) {
+           // Crear el nuevo directorio (nodo) con un hijo predeterminado vacío
+           DefaultMutableTreeNode nuevoDirectorio = new DefaultMutableTreeNode(nombreDirectorio);
+           DefaultMutableTreeNode hijoPredeterminado = new DefaultMutableTreeNode("");
+           nuevoDirectorio.add(hijoPredeterminado);
+
+           // Añadir el nuevo directorio como hijo del nodo padre
+           parentNode.add(nuevoDirectorio);
+           model.reload(parentNode); // Actualizar el modelo para reflejar los cambios
+           directorios.agregar(nombreDirectorio); // Asume que Lista tiene un método agregar
+           System.out.println("Directorio '" + nombreDirectorio + "' añadido correctamente al nodo padre '" + nombrePadre + "'.");
+       } else {
+           System.out.println("Error: No se encontró el nodo padre '" + nombrePadre + "'.");
+       }
+   }
+
+   /**
+    * Método para eliminar un archivo (hoja) del árbol.
+    *
+    * @param nombreArchivo El nombre del archivo que se desea eliminar.
+    */
+   public void eliminarArchivoJTree(String nombreArchivo) {
+       DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
+       DefaultMutableTreeNode nodeToDelete = findNodeJTree(root, nombreArchivo);
+
+       if (nodeToDelete != null) {
+           // Verificar si el nodo es una hoja (no tiene hijos)
+           if (nodeToDelete.isLeaf()) {
+               DefaultMutableTreeNode parent = (DefaultMutableTreeNode) nodeToDelete.getParent();
+               if (parent != null) {
+                   parent.remove(nodeToDelete); // Eliminar el nodo del árbol
+                   model.reload(parent); // Actualizar el modelo para reflejar los cambios
+                   System.out.println("Archivo '" + nombreArchivo + "' eliminado correctamente.");
+               } else {
+                   System.out.println("Error: El archivo '" + nombreArchivo + "' no tiene un nodo padre.");
+               }
+           } else {
+               System.out.println("Error: El nodo '" + nombreArchivo + "' no es una hoja (tiene hijos).");
+           }
+       } else {
+           System.out.println("Error: No se encontró el archivo '" + nombreArchivo + "' en el árbol.");
+       }
+   }
     
     /**
      * Método auxiliar para encontrar un nodo en el árbol por su nombre.
@@ -95,14 +149,14 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
      * @param nombre El nombre del nodo a buscar.
      * @return El nodo encontrado o null si no se encuentra.
      */
-    private DefaultMutableTreeNode findNode(DefaultMutableTreeNode root, String nombre) {
+    private DefaultMutableTreeNode findNodeJTree(DefaultMutableTreeNode root, String nombre) {
         if (root.getUserObject().equals(nombre)) {
             return root;
         }
 
         for (int i = 0; i < root.getChildCount(); i++) {
             DefaultMutableTreeNode child = (DefaultMutableTreeNode) root.getChildAt(i);
-            DefaultMutableTreeNode foundNode = findNode(child, nombre);
+            DefaultMutableTreeNode foundNode = findNodeJTree(child, nombre);
             if (foundNode != null) {
                 return foundNode;
             }
