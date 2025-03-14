@@ -2030,6 +2030,11 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
         jPanel1.add(createFile, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 650, 120, -1));
 
         createDir.setText("Crear Directorio");
+        createDir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                createDirActionPerformed(evt);
+            }
+        });
         jPanel1.add(createDir, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 650, -1, -1));
 
         change.setText("Cambiar de Modo");
@@ -2082,6 +2087,11 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
         // TODO add your handling code here:
         CrearArchivo cr = new CrearArchivo(this);
     }//GEN-LAST:event_createFileActionPerformed
+
+    private void createDirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createDirActionPerformed
+        // TODO add your handling code here:
+        CrearDirectorio cr = new CrearDirectorio(this);
+    }//GEN-LAST:event_createDirActionPerformed
 
     /**
      * @param args the command line arguments
