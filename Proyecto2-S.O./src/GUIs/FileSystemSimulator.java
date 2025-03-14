@@ -62,7 +62,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
     * @return true si el archivo se añadió correctamente, false si ya existe un hijo con el mismo nombre.
     */
    public boolean anadirArchivoJTree(String nombrePadre, String nombreArchivo) {
-       this.eliminarArchivoJTree("");
+       this.eliminarArchivoJTree(nombrePadre,"");
        DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
        DefaultMutableTreeNode parentNode = findNodeJTree(root, nombrePadre);
 
@@ -80,7 +80,6 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
            DefaultMutableTreeNode newFileNode = new DefaultMutableTreeNode(nombreArchivo);
            parentNode.add(newFileNode);
            model.reload(parentNode); // Actualiza el modelo para reflejar los cambios
-           directorios.agregar(nombreArchivo); // Asume que Lista tiene un método agregar
            System.out.println("Archivo '" + nombreArchivo + "' añadido correctamente al nodo padre '" + nombrePadre + "'.");
            return true; // Archivo añadido correctamente
        } else {
@@ -115,30 +114,36 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
    }
 
    /**
-    * Método para eliminar un archivo (hoja) del árbol.
+    * Método para eliminar un archivo (hoja) del árbol, verificando que pertenezca al nodo padre especificado.
     *
+    * @param nombrePadre El nombre del nodo padre del archivo que se desea eliminar.
     * @param nombreArchivo El nombre del archivo que se desea eliminar.
     */
-   public void eliminarArchivoJTree(String nombreArchivo) {
+   public void eliminarArchivoJTree(String nombrePadre, String nombreArchivo) {
        DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
-       DefaultMutableTreeNode nodeToDelete = findNodeJTree(root, nombreArchivo);
+       DefaultMutableTreeNode parentNode = findNodeJTree(root, nombrePadre);
 
-       if (nodeToDelete != null) {
-           // Verificar si el nodo es una hoja (no tiene hijos)
-           if (nodeToDelete.isLeaf()) {
-               DefaultMutableTreeNode parent = (DefaultMutableTreeNode) nodeToDelete.getParent();
-               if (parent != null) {
-                   parent.remove(nodeToDelete); // Eliminar el nodo del árbol
-                   model.reload(parent); // Actualizar el modelo para reflejar los cambios
-                   System.out.println("Archivo '" + nombreArchivo + "' eliminado correctamente.");
-               } else {
-                   System.out.println("Error: El archivo '" + nombreArchivo + "' no tiene un nodo padre.");
+       if (parentNode != null) {
+           // Buscar el archivo (hoja) dentro de los hijos del nodo padre
+           DefaultMutableTreeNode nodeToDelete = null;
+           for (int i = 0; i < parentNode.getChildCount(); i++) {
+               DefaultMutableTreeNode child = (DefaultMutableTreeNode) parentNode.getChildAt(i);
+               if (child.getUserObject().equals(nombreArchivo) && child.isLeaf()) {
+                   nodeToDelete = child;
+                   break;
                }
+           }
+
+           if (nodeToDelete != null) {
+               // Eliminar el nodo del árbol
+               parentNode.remove(nodeToDelete);
+               model.reload(parentNode); // Actualizar el modelo para reflejar los cambios
+               System.out.println("Archivo '" + nombreArchivo + "' eliminado correctamente del nodo padre '" + nombrePadre + "'.");
            } else {
-               System.out.println("Error: El nodo '" + nombreArchivo + "' no es una hoja (tiene hijos).");
+               System.out.println("Error: No se encontró el archivo '" + nombreArchivo + "' como hoja del nodo padre '" + nombrePadre + "'.");
            }
        } else {
-           System.out.println("Error: No se encontró el archivo '" + nombreArchivo + "' en el árbol.");
+           System.out.println("Error: No se encontró el nodo padre '" + nombrePadre + "'.");
        }
    }
     
