@@ -5,6 +5,7 @@
 package GUIs;
 
 import EDD.Lista;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
@@ -62,6 +63,13 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
     * @return true si el archivo se añadió correctamente, false si ya existe un hijo con el mismo nombre.
     */
    public boolean anadirArchivoJTree(String nombrePadre, String nombreArchivo) {
+      DefaultTableModel modeloTabla = (DefaultTableModel) Tabla.getModel();
+
+      // Crear un arreglo con los datos de la nueva fila
+      Object[] nuevaFila = {nombreArchivo, 1, 1, "lol"};
+
+        // Agregar la fila al modelo de la tabla
+        modeloTabla.addRow(nuevaFila);
        this.eliminarArchivoJTree(nombrePadre,"");
        DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
        DefaultMutableTreeNode parentNode = findNodeJTree(root, nombrePadre);
@@ -182,7 +190,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        Tabla = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
@@ -354,19 +362,16 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
 
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jTable1.setBackground(new java.awt.Color(204, 255, 255));
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        Tabla.setBackground(new java.awt.Color(204, 255, 255));
+        Tabla.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
                 "Nombre", "Bloque Inicial", "Longitud", "Color"
             }
         ));
-        jScrollPane2.setViewportView(jTable1);
+        jScrollPane2.setViewportView(Tabla);
 
         jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 328, 380, 310));
 
@@ -2247,6 +2252,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable Tabla;
     private javax.swing.JTree Tree;
     private javax.swing.JButton change;
     private javax.swing.JButton createDir;
@@ -2414,7 +2420,6 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTable jTable1;
     private javax.swing.JLabel modo;
     // End of variables declaration//GEN-END:variables
 }

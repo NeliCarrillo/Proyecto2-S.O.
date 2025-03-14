@@ -72,7 +72,7 @@ public class CrearArchivo extends javax.swing.JFrame {
         jLabel2.setText("Tamaño en Bloques:");
         jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 120, -1, -1));
 
-        jButton1.setText("Cancelar");
+        jButton1.setText("Volver");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
