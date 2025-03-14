@@ -12,7 +12,7 @@ import javax.swing.tree.DefaultTreeModel;
  *
  * @author nelsoncarrillo
  */
-public class FileSystemSimulator extends javax.swing.JFrame {
+public final class FileSystemSimulator extends javax.swing.JFrame {
     
     
     private String mode="Administrador";
@@ -45,10 +45,12 @@ public class FileSystemSimulator extends javax.swing.JFrame {
     
     public void LoadRoot(String n){
         DefaultMutableTreeNode raiz = new DefaultMutableTreeNode (n);
+        DefaultMutableTreeNode aux = new DefaultMutableTreeNode ("");
+        raiz.add(aux);
         model = (DefaultTreeModel)Tree.getModel();
         model.setRoot(raiz);
         Tree.setModel(model);
-        directorios.agregar(raiz);
+        directorios.agregar(n);
     }
     
     

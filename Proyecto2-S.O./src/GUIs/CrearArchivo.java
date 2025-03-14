@@ -4,7 +4,8 @@
  */
 package GUIs;
 
-import javax.swing.DefaultListModel;
+import EDD.Lista;
+import EDD.Nodo;
 
 /**
  *
@@ -12,7 +13,7 @@ import javax.swing.DefaultListModel;
  */
 public class CrearArchivo extends javax.swing.JFrame {
     
-    FileSystemSimulator sim;
+    private FileSystemSimulator sim;
 
     /**
      * Creates new form CrearArchivo
@@ -23,15 +24,20 @@ public class CrearArchivo extends javax.swing.JFrame {
         this.setVisible(true);
         this.setLocationRelativeTo(null);
         this.setResizable(false);
-        iniciarLista();
+        this.actualizarDir();
     }
 
     private CrearArchivo() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
-    public void iniciarLista(){
-        
+    private void actualizarDir(){
+        Lista direc = this.sim.getDirectorios();
+        Nodo cabeza = direc.getPrimero();
+        while(cabeza!=null){
+            this.directorio.addItem((String)cabeza.getDato());
+            cabeza=cabeza.getSiguiente();
+        }
     }
 
     /**
@@ -50,9 +56,8 @@ public class CrearArchivo extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         Añadir = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        lista = new javax.swing.JList<>();
         jLabel3 = new javax.swing.JLabel();
+        directorio = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -82,12 +87,10 @@ public class CrearArchivo extends javax.swing.JFrame {
         });
         jPanel1.add(Añadir, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 340, 90, -1));
 
-        jScrollPane1.setViewportView(lista);
-
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 160, 170, -1));
-
         jLabel3.setText("Directorio:");
         jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 160, -1, -1));
+
+        jPanel1.add(directorio, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 160, 170, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -149,13 +152,12 @@ public class CrearArchivo extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Añadir;
+    private javax.swing.JComboBox<String> directorio;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JList<String> lista;
     private javax.swing.JTextField nombre;
     private javax.swing.JTextField tamano;
     // End of variables declaration//GEN-END:variables

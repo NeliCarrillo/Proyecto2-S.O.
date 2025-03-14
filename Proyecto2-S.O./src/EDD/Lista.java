@@ -17,6 +17,10 @@ public class Lista<T> {
         this.primero = null;
         this.ultimo = null;
     }
+    
+    public Nodo getPrimero(){
+        return primero;
+    }
 
     // Método para verificar si la lista está vacía
     public boolean estaVacia() {
