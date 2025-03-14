@@ -4,17 +4,34 @@
  */
 package GUIs;
 
+import javax.swing.DefaultListModel;
+
 /**
  *
  * @author nelsoncarrillo
  */
 public class CrearArchivo extends javax.swing.JFrame {
+    
+    FileSystemSimulator sim;
 
     /**
      * Creates new form CrearArchivo
      */
-    public CrearArchivo() {
+    public CrearArchivo(FileSystemSimulator s) {
         initComponents();
+        this.sim=s;
+        this.setVisible(true);
+        this.setLocationRelativeTo(null);
+        this.setResizable(false);
+        iniciarLista();
+    }
+
+    private CrearArchivo() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+    
+    public void iniciarLista(){
+        
     }
 
     /**
@@ -50,6 +67,11 @@ public class CrearArchivo extends javax.swing.JFrame {
         jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 120, -1, -1));
 
         jButton1.setText("Cancelar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
         jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 340, 90, -1));
 
         Añadir.setText("Añadir");
@@ -60,11 +82,6 @@ public class CrearArchivo extends javax.swing.JFrame {
         });
         jPanel1.add(Añadir, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 340, 90, -1));
 
-        lista.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         jScrollPane1.setViewportView(lista);
 
         jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 160, 170, -1));
@@ -89,6 +106,13 @@ public class CrearArchivo extends javax.swing.JFrame {
     private void AñadirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AñadirActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_AñadirActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        this.setVisible(false);
+        this.nombre.setText("");
+        this.tamano.setText("");
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -118,10 +142,8 @@ public class CrearArchivo extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new CrearArchivo().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new CrearArchivo().setVisible(true);
         });
     }
 

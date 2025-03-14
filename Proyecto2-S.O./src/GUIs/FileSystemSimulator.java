@@ -4,6 +4,7 @@
  */
 package GUIs;
 
+import EDD.Lista;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
@@ -16,10 +17,15 @@ public class FileSystemSimulator extends javax.swing.JFrame {
     
     private String mode="Administrador";
     private DefaultTreeModel model;
+    private Lista directorios = new Lista();
 
 
     public String getMode() {
         return mode;
+    }
+    
+    public Lista getDirectorios() {
+        return directorios;
     }
 
     public void setMode(String mode) {
@@ -34,17 +40,15 @@ public class FileSystemSimulator extends javax.swing.JFrame {
         this.setVisible(true);
         this.setLocationRelativeTo(null);
         this.setResizable(false);
-        Load();
+        LoadRoot("FileSystem");
     }
     
-    DefaultMutableTreeNode courses = new DefaultMutableTreeNode ("FileSystem");
-    public void Load(){
-        //DefaultMutableTreeNode designNode = new DefaultMutableTreeNode ("Graphic Designing") ;
-        //designNode.add(new DefaultMutableTreeNode("Photoshop"));
-        //courses.add(designNode);
+    public void LoadRoot(String n){
+        DefaultMutableTreeNode raiz = new DefaultMutableTreeNode (n);
         model = (DefaultTreeModel)Tree.getModel();
-        model.setRoot(courses);
+        model.setRoot(raiz);
         Tree.setModel(model);
+        directorios.agregar(raiz);
     }
     
     
@@ -1434,6 +1438,7 @@ public class FileSystemSimulator extends javax.swing.JFrame {
 
     private void createFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createFileActionPerformed
         // TODO add your handling code here:
+        CrearArchivo cr = new CrearArchivo(this);
     }//GEN-LAST:event_createFileActionPerformed
 
     /**
