@@ -53,6 +53,64 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
         directorios.agregar(n);
     }
     
+    /**
+    * Método para añadir un archivo (hoja) a un nodo padre específico.
+    * Los hijos de un mismo padre no pueden tener el mismo nombre.
+    *
+    * @param nombrePadre El nombre del nodo padre al que se añadirá el archivo.
+    * @param nombreArchivo El nombre del archivo que se añadirá como hoja.
+    * @return true si el archivo se añadió correctamente, false si ya existe un hijo con el mismo nombre.
+    */
+   public boolean anadirArchivo(String nombrePadre, String nombreArchivo) {
+       DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
+       DefaultMutableTreeNode parentNode = findNode(root, nombrePadre);
+
+       if (parentNode != null) {
+           // Verificar si ya existe un hijo con el mismo nombre
+           for (int i = 0; i < parentNode.getChildCount(); i++) {
+               DefaultMutableTreeNode child = (DefaultMutableTreeNode) parentNode.getChildAt(i);
+               if (child.getUserObject().equals(nombreArchivo)) {
+                   System.out.println("Error: Ya existe un archivo con el nombre '" + nombreArchivo + "' en el nodo padre '" + nombrePadre + "'.");
+                   return false; // No se puede añadir, ya existe un hijo con ese nombre
+               }
+           }
+
+           // Si no existe un hijo con el mismo nombre, añadir el nuevo archivo
+           DefaultMutableTreeNode newFileNode = new DefaultMutableTreeNode(nombreArchivo);
+           parentNode.add(newFileNode);
+           model.reload(parentNode); // Actualiza el modelo para reflejar los cambios
+           directorios.agregar(nombreArchivo); // Asume que Lista tiene un método agregar
+           System.out.println("Archivo '" + nombreArchivo + "' añadido correctamente al nodo padre '" + nombrePadre + "'.");
+           return true; // Archivo añadido correctamente
+       } else {
+           System.out.println("Error: Nodo padre no encontrado: " + nombrePadre);
+           return false; // Nodo padre no existe
+       }
+   }
+    
+    /**
+     * Método auxiliar para encontrar un nodo en el árbol por su nombre.
+     *
+     * @param root El nodo raíz desde donde comenzar la búsqueda.
+     * @param nombre El nombre del nodo a buscar.
+     * @return El nodo encontrado o null si no se encuentra.
+     */
+    private DefaultMutableTreeNode findNode(DefaultMutableTreeNode root, String nombre) {
+        if (root.getUserObject().equals(nombre)) {
+            return root;
+        }
+
+        for (int i = 0; i < root.getChildCount(); i++) {
+            DefaultMutableTreeNode child = (DefaultMutableTreeNode) root.getChildAt(i);
+            DefaultMutableTreeNode foundNode = findNode(child, nombre);
+            if (foundNode != null) {
+                return foundNode;
+            }
+        }
+
+        return null;
+    }
+    
     
     /**
      * This method is called from within the constructor to initialize the form.

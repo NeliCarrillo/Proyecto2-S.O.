@@ -108,6 +108,8 @@ public class CrearArchivo extends javax.swing.JFrame {
 
     private void AñadirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AñadirActionPerformed
         // TODO add your handling code here:
+        this.sim.anadirArchivo(directorio.getSelectedItem().toString(), "Hola");
+            
     }//GEN-LAST:event_AñadirActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
