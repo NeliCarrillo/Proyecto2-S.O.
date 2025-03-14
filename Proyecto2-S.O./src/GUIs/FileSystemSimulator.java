@@ -18,7 +18,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
     
     private String mode="Administrador";
     private DefaultTreeModel model;
-    private Lista directorios = new Lista();
+    private final Lista directorios = new Lista();
 
 
     public String getMode() {
@@ -63,6 +63,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
     * @return true si el archivo se añadió correctamente, false si ya existe un hijo con el mismo nombre.
     */
    public boolean anadirArchivoJTree(String nombrePadre, String nombreArchivo) {
+      
       DefaultTableModel modeloTabla = (DefaultTableModel) Tabla.getModel();
 
       // Crear un arreglo con los datos de la nueva fila
