@@ -77,7 +77,7 @@ public class CrearArchivo extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 340, 90, -1));
+        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 230, 90, -1));
 
         Añadir.setText("Añadir");
         Añadir.addActionListener(new java.awt.event.ActionListener() {
@@ -85,7 +85,7 @@ public class CrearArchivo extends javax.swing.JFrame {
                 AñadirActionPerformed(evt);
             }
         });
-        jPanel1.add(Añadir, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 340, 90, -1));
+        jPanel1.add(Añadir, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 230, 90, -1));
 
         jLabel3.setText("Directorio:");
         jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 160, -1, -1));
@@ -100,7 +100,7 @@ public class CrearArchivo extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 406, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
         );
 
         pack();
