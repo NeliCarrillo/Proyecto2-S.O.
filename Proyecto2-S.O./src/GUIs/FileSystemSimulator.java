@@ -7,6 +7,7 @@ package GUIs;
 import EDD.Lista;
 import Objetos.ColorCellRenderer;
 import java.awt.Color;
+import java.util.Random;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -56,6 +57,27 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
         directorios.agregar(n);
     }
     
+    
+    public void anadirArchivoJTable(boolean re, String nombreArchivo){
+        if (re) {
+            DefaultTableModel modeloTabla = (DefaultTableModel) Tabla.getModel();
+            Tabla.getColumnModel().getColumn(3).setCellRenderer(new ColorCellRenderer());
+
+            // Generar un color aleatorio
+            Random rand = new Random();
+            int r = rand.nextInt(256); // Componente rojo (0-255)
+            int g = rand.nextInt(256); // Componente verde (0-255)
+            int b = rand.nextInt(256); // Componente azul (0-255)
+            Color colorArchivo = new Color(r, g, b);
+
+            // Crear un arreglo con los datos de la nueva fila
+            Object[] nuevaFila = {nombreArchivo, 1, 1, colorArchivo};
+
+            // Agregar la fila al modelo de la tabla
+            modeloTabla.addRow(nuevaFila);
+        }
+    }
+    
     /**
     * Método para añadir un archivo (hoja) a un nodo padre específico.
     * Los hijos de un mismo padre no pueden tener el mismo nombre.
@@ -65,17 +87,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
     * @return true si el archivo se añadió correctamente, false si ya existe un hijo con el mismo nombre.
     */
    public boolean anadirArchivoJTree(String nombrePadre, String nombreArchivo) {
-      
-      DefaultTableModel modeloTabla = (DefaultTableModel) Tabla.getModel();
-      Tabla.getColumnModel().getColumn(3).setCellRenderer(new ColorCellRenderer());
-      Color colorArchivo = new Color(100, 150, 255); // Azul claro, por ejemplo
-
-        // Crear un arreglo con los datos de la nueva fila
-        Object[] nuevaFila = {nombreArchivo, 1, 1, colorArchivo};
-
-        // Agregar la fila al modelo de la tabla
-        modeloTabla.addRow(nuevaFila);
-       //hola
+        
        this.eliminarArchivoJTree(nombrePadre,"");
        DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
        DefaultMutableTreeNode parentNode = findNodeJTree(root, nombrePadre);
