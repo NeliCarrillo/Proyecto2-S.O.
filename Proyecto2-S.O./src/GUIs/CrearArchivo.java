@@ -25,6 +25,7 @@ public class CrearArchivo extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         this.setResizable(false);
         this.actualizarDir();
+        this.sim.disable();
     }
 
     private CrearArchivo() {
@@ -114,6 +115,7 @@ public class CrearArchivo extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        this.sim.enable();
         this.setVisible(false);
         this.nombre.setText("");
         this.tamano.setText("");
