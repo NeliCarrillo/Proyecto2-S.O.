@@ -5,6 +5,8 @@
 package GUIs;
 
 import EDD.Lista;
+import Objetos.ColorCellRenderer;
+import java.awt.Color;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -65,13 +67,15 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
    public boolean anadirArchivoJTree(String nombrePadre, String nombreArchivo) {
       
       DefaultTableModel modeloTabla = (DefaultTableModel) Tabla.getModel();
+      Tabla.getColumnModel().getColumn(3).setCellRenderer(new ColorCellRenderer());
+      Color colorArchivo = new Color(100, 150, 255); // Azul claro, por ejemplo
 
-      // Crear un arreglo con los datos de la nueva fila
-      Object[] nuevaFila = {nombreArchivo, 1, 1, "lol"};
-      
+        // Crear un arreglo con los datos de la nueva fila
+        Object[] nuevaFila = {nombreArchivo, 1, 1, colorArchivo};
 
-       // Agregar la fila al modelo de la tabla
-       modeloTabla.addRow(nuevaFila);
+        // Agregar la fila al modelo de la tabla
+        modeloTabla.addRow(nuevaFila);
+       //hola
        this.eliminarArchivoJTree(nombrePadre,"");
        DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
        DefaultMutableTreeNode parentNode = findNodeJTree(root, nombrePadre);
