@@ -68,9 +68,10 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
 
       // Crear un arreglo con los datos de la nueva fila
       Object[] nuevaFila = {nombreArchivo, 1, 1, "lol"};
+      
 
-        // Agregar la fila al modelo de la tabla
-        modeloTabla.addRow(nuevaFila);
+       // Agregar la fila al modelo de la tabla
+       modeloTabla.addRow(nuevaFila);
        this.eliminarArchivoJTree(nombrePadre,"");
        DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
        DefaultMutableTreeNode parentNode = findNodeJTree(root, nombrePadre);
