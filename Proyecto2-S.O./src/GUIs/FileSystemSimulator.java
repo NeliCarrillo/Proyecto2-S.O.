@@ -57,6 +57,11 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
         directorios.agregar(n);
     }
     
+    public void nuevoArchivo(String nombreArchivo, String nombrePadre,int tamano){
+        boolean seAgrego = this.anadirArchivoJTree(nombrePadre, nombreArchivo);
+        this.anadirArchivoJTable(seAgrego, nombreArchivo);
+    }
+    
     /**
     * Método para añadir una fila a un JTable con un archivo y un color aleatorio.
     * Si el parámetro `re` es verdadero, se añade una nueva fila al JTable con el nombre del archivo

@@ -109,8 +109,7 @@ public class CrearArchivo extends javax.swing.JFrame {
 
     private void AñadirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AñadirActionPerformed
         // TODO add your handling code here:
-        boolean seAgrego = this.sim.anadirArchivoJTree(directorio.getSelectedItem().toString(), "Hola");
-        this.sim.anadirArchivoJTable(seAgrego, "Hola");
+        this.sim.nuevoArchivo(this.nombre.getText(), this.directorio.getSelectedItem().toString(), Integer.parseInt(this.tamano.getText()));
     }//GEN-LAST:event_AñadirActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
