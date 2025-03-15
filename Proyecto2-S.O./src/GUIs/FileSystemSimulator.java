@@ -8,7 +8,12 @@ import EDD.Lista;
 import Objetos.Archivo;
 import Objetos.ColorCellRenderer;
 import java.awt.Color;
+import java.lang.reflect.Field;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -23,6 +28,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
     private String mode="Administrador";
     private DefaultTreeModel model;
     private final Lista directorios = new Lista();
+    private int nextAvailablePanel; // Lleva la cuenta del siguiente JPanel disponible
 
 
     public String getMode() {
@@ -40,12 +46,15 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
     /**
      * Creates new form Dos
      */
-    public FileSystemSimulator() {
+    public FileSystemSimulator() throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
         initComponents();
         this.setVisible(true);
         this.setLocationRelativeTo(null);
         this.setResizable(false);
         LoadRoot("FileSystem");
+        this.nextAvailablePanel=1;
+        this.addFile(12, 100, 100, 100);
+        this.addFile(3, 200, 200, 200);
     }
     
     public void LoadRoot(String n){
@@ -211,6 +220,54 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
         return null;
     }
     
+    public void addFile(int fileSize, int r, int g, int b) {
+        if (fileSize > 50 || nextAvailablePanel + fileSize - 1 > 50) {
+            JOptionPane.showMessageDialog(this, "No hay suficiente espacio para el archivo.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        Color color = new Color(r, g, b);
+
+        // Colorear los JPanels correspondientes al archivo
+        for (int i = nextAvailablePanel; i < nextAvailablePanel + fileSize; i++) {
+            try {
+                Field field = this.getClass().getDeclaredField("jPanel" + i);
+                field.setAccessible(true);
+                JPanel panel = (JPanel) field.get(this);
+                panel.setBackground(color);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Actualizar el siguiente JPanel disponible
+        nextAvailablePanel += fileSize;
+
+        // Repintar el JFrame para reflejar los cambios
+        this.revalidate();
+        this.repaint();
+    }
+
+    public void resetFileSystem() {
+        // Reiniciar todos los JPanels a blanco y resetear el contador
+        for (int i = 1; i <= 50; i++) {
+            try {
+                Field field = this.getClass().getDeclaredField("jPanel" + i);
+                field.setAccessible(true);
+                JPanel panel = (JPanel) field.get(this);
+                panel.setBackground(Color.WHITE);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        nextAvailablePanel = 1; // Reiniciar el contador
+
+        // Repintar el JFrame para reflejar los cambios
+        this.revalidate();
+        this.repaint();
+    }
+
+    
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -221,18 +278,18 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
+        jPanel1123123 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         Tabla = new javax.swing.JTable();
-        jPanel2 = new javax.swing.JPanel();
+        jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jPanel3 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        jPanel4 = new javax.swing.JPanel();
+        jPanel3 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
-        jPanel5 = new javax.swing.JPanel();
+        jPanel4 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
-        jPanel6 = new javax.swing.JPanel();
+        jPanel5 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         jPanel7 = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
@@ -334,7 +391,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
         jLabel19 = new javax.swing.JLabel();
         jPanel62 = new javax.swing.JPanel();
         jLabel61 = new javax.swing.JLabel();
-        jPanel42 = new javax.swing.JPanel();
+        jPanel6 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         jPanel65 = new javax.swing.JPanel();
         jLabel67 = new javax.swing.JLabel();
@@ -393,7 +450,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jPanel1123123.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         Tabla.setBackground(new java.awt.Color(204, 255, 255));
         Tabla.setModel(new javax.swing.table.DefaultTableModel(
@@ -406,12 +463,34 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
         ));
         jScrollPane2.setViewportView(Tabla);
 
-        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 328, 380, 310));
+        jPanel1123123.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 328, 380, 310));
 
-        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel2.setForeground(new java.awt.Color(255, 255, 255));
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setForeground(new java.awt.Color(255, 255, 255));
 
         jLabel1.setText("1");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addContainerGap(57, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jLabel1)
+                .addGap(0, 50, Short.MAX_VALUE))
+        );
+
+        jPanel1123123.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 10, 70, 67));
+
+        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel2.setText("2");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -419,21 +498,21 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
+                .addComponent(jLabel2)
                 .addContainerGap(57, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jLabel1)
+                .addComponent(jLabel2)
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 10, 70, 67));
+        jPanel1123123.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 10, 70, 67));
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel2.setText("2");
+        jLabel3.setText("3");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -441,21 +520,21 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel2)
+                .addComponent(jLabel3)
                 .addContainerGap(57, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(jLabel2)
+                .addComponent(jLabel3)
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 10, 70, 67));
+        jPanel1123123.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 10, 70, 67));
 
         jPanel4.setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel3.setText("3");
+        jLabel4.setText("4");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -463,21 +542,21 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel3)
+                .addComponent(jLabel4)
                 .addContainerGap(57, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addComponent(jLabel3)
+                .addComponent(jLabel4)
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 10, 70, 67));
+        jPanel1123123.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 10, 70, 67));
 
         jPanel5.setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel4.setText("4");
+        jLabel5.setText("5");
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -485,39 +564,17 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel4)
+                .addComponent(jLabel5)
                 .addContainerGap(57, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addComponent(jLabel4)
-                .addGap(0, 50, Short.MAX_VALUE))
-        );
-
-        jPanel1.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 10, 70, 67));
-
-        jPanel6.setBackground(new java.awt.Color(255, 255, 255));
-
-        jLabel5.setText("5");
-
-        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
-        jPanel6.setLayout(jPanel6Layout);
-        jPanel6Layout.setHorizontalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel5)
-                .addContainerGap(57, Short.MAX_VALUE))
-        );
-        jPanel6Layout.setVerticalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
                 .addComponent(jLabel5)
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 10, 70, 67));
+        jPanel1123123.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 10, 70, 67));
 
         jPanel7.setBackground(new java.awt.Color(255, 255, 255));
         jPanel7.setForeground(new java.awt.Color(255, 255, 255));
@@ -540,7 +597,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(401, 91, 70, 67));
+        jPanel1123123.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(401, 91, 70, 67));
 
         jPanel8.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -562,7 +619,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 90, 70, 67));
+        jPanel1123123.add(jPanel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 90, 70, 67));
 
         jPanel9.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -584,7 +641,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 90, 70, 67));
+        jPanel1123123.add(jPanel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 90, 70, 67));
 
         jPanel10.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -606,7 +663,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 90, 70, 67));
+        jPanel1123123.add(jPanel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 90, 70, 67));
 
         jPanel11.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -628,7 +685,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 90, 70, 67));
+        jPanel1123123.add(jPanel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 90, 70, 67));
 
         jPanel12.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -650,7 +707,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 170, 70, 67));
+        jPanel1123123.add(jPanel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 170, 70, 67));
 
         jPanel13.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -672,7 +729,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 170, 70, 67));
+        jPanel1123123.add(jPanel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 170, 70, 67));
 
         jPanel14.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -694,7 +751,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 170, 70, 67));
+        jPanel1123123.add(jPanel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 170, 70, 67));
 
         jPanel15.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -716,7 +773,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 170, 70, 67));
+        jPanel1123123.add(jPanel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 170, 70, 67));
 
         jPanel16.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -738,7 +795,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 170, 70, 67));
+        jPanel1123123.add(jPanel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 170, 70, 67));
 
         jPanel17.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -760,7 +817,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 250, 70, 67));
+        jPanel1123123.add(jPanel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 250, 70, 67));
 
         jPanel18.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -782,7 +839,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 250, 70, 67));
+        jPanel1123123.add(jPanel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 250, 70, 67));
 
         jPanel19.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -804,7 +861,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 250, 70, 67));
+        jPanel1123123.add(jPanel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 250, 70, 67));
 
         jPanel20.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -826,7 +883,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 250, 70, 67));
+        jPanel1123123.add(jPanel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 250, 70, 67));
 
         jPanel21.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -848,7 +905,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel21, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 250, 70, 67));
+        jPanel1123123.add(jPanel21, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 250, 70, 67));
 
         jPanel32.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -870,7 +927,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel32, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 490, 70, 67));
+        jPanel1123123.add(jPanel32, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 490, 70, 67));
 
         jPanel23.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -892,7 +949,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel23, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 330, 70, -1));
+        jPanel1123123.add(jPanel23, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 330, 70, -1));
 
         jPanel27.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -914,7 +971,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel27, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 410, 70, 67));
+        jPanel1123123.add(jPanel27, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 410, 70, 67));
 
         jPanel22.setBackground(new java.awt.Color(255, 255, 255));
         jPanel22.setForeground(new java.awt.Color(255, 255, 255));
@@ -937,7 +994,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 330, 70, -1));
+        jPanel1123123.add(jPanel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 330, 70, -1));
 
         jPanel24.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -959,7 +1016,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel24, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 330, 70, 67));
+        jPanel1123123.add(jPanel24, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 330, 70, 67));
 
         jPanel40.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -981,7 +1038,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel40, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 570, 70, 67));
+        jPanel1123123.add(jPanel40, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 570, 70, 67));
 
         jPanel33.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -1003,7 +1060,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel33, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 490, 70, 67));
+        jPanel1123123.add(jPanel33, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 490, 70, 67));
 
         jPanel39.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -1025,7 +1082,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel39, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 570, 70, 67));
+        jPanel1123123.add(jPanel39, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 570, 70, 67));
 
         jPanel35.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -1047,7 +1104,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel35, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 490, 70, 67));
+        jPanel1123123.add(jPanel35, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 490, 70, 67));
 
         jPanel30.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -1069,7 +1126,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel30, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 410, 70, 67));
+        jPanel1123123.add(jPanel30, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 410, 70, 67));
 
         jPanel41.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -1091,7 +1148,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel41, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 570, 70, 67));
+        jPanel1123123.add(jPanel41, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 570, 70, 67));
 
         jPanel36.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -1113,7 +1170,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel36, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 490, 70, 67));
+        jPanel1123123.add(jPanel36, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 490, 70, 67));
 
         jPanel29.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -1135,7 +1192,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel29, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 410, 70, 67));
+        jPanel1123123.add(jPanel29, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 410, 70, 67));
 
         jPanel31.setBackground(new java.awt.Color(255, 255, 255));
         jPanel31.setForeground(new java.awt.Color(255, 255, 255));
@@ -1158,7 +1215,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel31, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 410, 70, 67));
+        jPanel1123123.add(jPanel31, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 410, 70, 67));
 
         jPanel38.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -1180,7 +1237,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel38, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 570, 70, 67));
+        jPanel1123123.add(jPanel38, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 570, 70, 67));
 
         jPanel28.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -1202,7 +1259,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel28, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 410, 70, 67));
+        jPanel1123123.add(jPanel28, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 410, 70, 67));
 
         jPanel37.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -1224,7 +1281,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel37, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 570, 70, 67));
+        jPanel1123123.add(jPanel37, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 570, 70, 67));
 
         jPanel25.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -1246,7 +1303,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel25, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 330, 70, 67));
+        jPanel1123123.add(jPanel25, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 330, 70, 67));
 
         jPanel34.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -1268,7 +1325,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel34, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 490, 70, 67));
+        jPanel1123123.add(jPanel34, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 490, 70, 67));
 
         jPanel26.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -1290,7 +1347,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel26, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 330, 70, 67));
+        jPanel1123123.add(jPanel26, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 330, 70, 67));
 
         jPanel53.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -1312,7 +1369,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel53, new org.netbeans.lib.awtextra.AbsoluteConstraints(940, 170, 70, 67));
+        jPanel1123123.add(jPanel53, new org.netbeans.lib.awtextra.AbsoluteConstraints(940, 170, 70, 67));
 
         jPanel61.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -1334,7 +1391,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel61, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 250, 70, 67));
+        jPanel1123123.add(jPanel61, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 250, 70, 67));
 
         jPanel64.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -1356,7 +1413,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel64, new org.netbeans.lib.awtextra.AbsoluteConstraints(1030, 330, 70, 67));
+        jPanel1123123.add(jPanel64, new org.netbeans.lib.awtextra.AbsoluteConstraints(1030, 330, 70, 67));
 
         jPanel49.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -1378,7 +1435,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel49, new org.netbeans.lib.awtextra.AbsoluteConstraints(1030, 90, 70, 67));
+        jPanel1123123.add(jPanel49, new org.netbeans.lib.awtextra.AbsoluteConstraints(1030, 90, 70, 67));
 
         jPanel81.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -1400,7 +1457,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel81, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 570, 70, 67));
+        jPanel1123123.add(jPanel81, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 570, 70, 67));
 
         jPanel46.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -1422,7 +1479,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel46, new org.netbeans.lib.awtextra.AbsoluteConstraints(1210, 10, 70, 67));
+        jPanel1123123.add(jPanel46, new org.netbeans.lib.awtextra.AbsoluteConstraints(1210, 10, 70, 67));
 
         jPanel73.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -1444,7 +1501,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel73, new org.netbeans.lib.awtextra.AbsoluteConstraints(940, 490, 70, 67));
+        jPanel1123123.add(jPanel73, new org.netbeans.lib.awtextra.AbsoluteConstraints(940, 490, 70, 67));
 
         jPanel58.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -1466,7 +1523,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel58, new org.netbeans.lib.awtextra.AbsoluteConstraints(1120, 250, 70, 67));
+        jPanel1123123.add(jPanel58, new org.netbeans.lib.awtextra.AbsoluteConstraints(1120, 250, 70, 67));
 
         jPanel68.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -1488,7 +1545,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel68, new org.netbeans.lib.awtextra.AbsoluteConstraints(1120, 410, 70, 67));
+        jPanel1123123.add(jPanel68, new org.netbeans.lib.awtextra.AbsoluteConstraints(1120, 410, 70, 67));
 
         jPanel71.setBackground(new java.awt.Color(255, 255, 255));
         jPanel71.setForeground(new java.awt.Color(255, 255, 255));
@@ -1511,7 +1568,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel71, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 410, 70, 67));
+        jPanel1123123.add(jPanel71, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 410, 70, 67));
 
         jPanel45.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -1533,7 +1590,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel45, new org.netbeans.lib.awtextra.AbsoluteConstraints(1120, 10, 70, 67));
+        jPanel1123123.add(jPanel45, new org.netbeans.lib.awtextra.AbsoluteConstraints(1120, 10, 70, 67));
 
         jPanel51.setBackground(new java.awt.Color(255, 255, 255));
         jPanel51.setForeground(new java.awt.Color(255, 255, 255));
@@ -1556,7 +1613,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel51, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 90, 70, 67));
+        jPanel1123123.add(jPanel51, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 90, 70, 67));
 
         jPanel79.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -1578,7 +1635,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel79, new org.netbeans.lib.awtextra.AbsoluteConstraints(1030, 570, 70, 67));
+        jPanel1123123.add(jPanel79, new org.netbeans.lib.awtextra.AbsoluteConstraints(1030, 570, 70, 67));
 
         jPanel48.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -1600,7 +1657,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel48, new org.netbeans.lib.awtextra.AbsoluteConstraints(1120, 90, 70, 67));
+        jPanel1123123.add(jPanel48, new org.netbeans.lib.awtextra.AbsoluteConstraints(1120, 90, 70, 67));
 
         jPanel62.setBackground(new java.awt.Color(255, 255, 255));
         jPanel62.setForeground(new java.awt.Color(255, 255, 255));
@@ -1623,30 +1680,30 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel62, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 330, 70, 67));
+        jPanel1123123.add(jPanel62, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 330, 70, 67));
 
-        jPanel42.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel42.setForeground(new java.awt.Color(255, 255, 255));
+        jPanel6.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel6.setForeground(new java.awt.Color(255, 255, 255));
 
         jLabel6.setText("6");
 
-        javax.swing.GroupLayout jPanel42Layout = new javax.swing.GroupLayout(jPanel42);
-        jPanel42.setLayout(jPanel42Layout);
-        jPanel42Layout.setHorizontalGroup(
-            jPanel42Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel42Layout.createSequentialGroup()
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel6)
                 .addContainerGap(57, Short.MAX_VALUE))
         );
-        jPanel42Layout.setVerticalGroup(
-            jPanel42Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel42Layout.createSequentialGroup()
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
                 .addComponent(jLabel6)
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel42, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 10, 70, -1));
+        jPanel1123123.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 10, 70, -1));
 
         jPanel65.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -1668,7 +1725,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel65, new org.netbeans.lib.awtextra.AbsoluteConstraints(1120, 330, 70, -1));
+        jPanel1123123.add(jPanel65, new org.netbeans.lib.awtextra.AbsoluteConstraints(1120, 330, 70, -1));
 
         jPanel66.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -1690,7 +1747,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel66, new org.netbeans.lib.awtextra.AbsoluteConstraints(1210, 330, 70, 67));
+        jPanel1123123.add(jPanel66, new org.netbeans.lib.awtextra.AbsoluteConstraints(1210, 330, 70, 67));
 
         jPanel63.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -1712,7 +1769,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel63, new org.netbeans.lib.awtextra.AbsoluteConstraints(940, 330, 70, 67));
+        jPanel1123123.add(jPanel63, new org.netbeans.lib.awtextra.AbsoluteConstraints(940, 330, 70, 67));
 
         jPanel56.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -1734,7 +1791,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel56, new org.netbeans.lib.awtextra.AbsoluteConstraints(1210, 170, 70, 67));
+        jPanel1123123.add(jPanel56, new org.netbeans.lib.awtextra.AbsoluteConstraints(1210, 170, 70, 67));
 
         jPanel78.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -1756,7 +1813,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel78, new org.netbeans.lib.awtextra.AbsoluteConstraints(1120, 570, 70, 67));
+        jPanel1123123.add(jPanel78, new org.netbeans.lib.awtextra.AbsoluteConstraints(1120, 570, 70, 67));
 
         jPanel67.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -1778,7 +1835,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel67, new org.netbeans.lib.awtextra.AbsoluteConstraints(1210, 410, 70, -1));
+        jPanel1123123.add(jPanel67, new org.netbeans.lib.awtextra.AbsoluteConstraints(1210, 410, 70, -1));
 
         jPanel69.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -1800,7 +1857,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel69, new org.netbeans.lib.awtextra.AbsoluteConstraints(1030, 410, 70, 67));
+        jPanel1123123.add(jPanel69, new org.netbeans.lib.awtextra.AbsoluteConstraints(1030, 410, 70, 67));
 
         jPanel72.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -1822,7 +1879,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel72, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 490, 70, 67));
+        jPanel1123123.add(jPanel72, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 490, 70, 67));
 
         jPanel52.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -1844,7 +1901,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel52, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 170, 70, 67));
+        jPanel1123123.add(jPanel52, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 170, 70, 67));
 
         jPanel55.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -1866,7 +1923,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel55, new org.netbeans.lib.awtextra.AbsoluteConstraints(1120, 170, 70, 67));
+        jPanel1123123.add(jPanel55, new org.netbeans.lib.awtextra.AbsoluteConstraints(1120, 170, 70, 67));
 
         jPanel75.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -1888,7 +1945,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel75, new org.netbeans.lib.awtextra.AbsoluteConstraints(1120, 490, 70, 67));
+        jPanel1123123.add(jPanel75, new org.netbeans.lib.awtextra.AbsoluteConstraints(1120, 490, 70, 67));
 
         jPanel80.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -1910,7 +1967,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel80, new org.netbeans.lib.awtextra.AbsoluteConstraints(940, 570, 70, 67));
+        jPanel1123123.add(jPanel80, new org.netbeans.lib.awtextra.AbsoluteConstraints(940, 570, 70, 67));
 
         jPanel77.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -1932,7 +1989,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel77, new org.netbeans.lib.awtextra.AbsoluteConstraints(1210, 570, 70, 67));
+        jPanel1123123.add(jPanel77, new org.netbeans.lib.awtextra.AbsoluteConstraints(1210, 570, 70, 67));
 
         jPanel50.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -1954,7 +2011,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel50, new org.netbeans.lib.awtextra.AbsoluteConstraints(940, 90, 70, 67));
+        jPanel1123123.add(jPanel50, new org.netbeans.lib.awtextra.AbsoluteConstraints(940, 90, 70, 67));
 
         jPanel54.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -1976,7 +2033,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel54, new org.netbeans.lib.awtextra.AbsoluteConstraints(1030, 170, 70, 67));
+        jPanel1123123.add(jPanel54, new org.netbeans.lib.awtextra.AbsoluteConstraints(1030, 170, 70, 67));
 
         jPanel74.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -1998,7 +2055,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel74, new org.netbeans.lib.awtextra.AbsoluteConstraints(1030, 490, 70, 67));
+        jPanel1123123.add(jPanel74, new org.netbeans.lib.awtextra.AbsoluteConstraints(1030, 490, 70, 67));
 
         jPanel44.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -2020,7 +2077,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel44, new org.netbeans.lib.awtextra.AbsoluteConstraints(1030, 10, 70, 67));
+        jPanel1123123.add(jPanel44, new org.netbeans.lib.awtextra.AbsoluteConstraints(1030, 10, 70, 67));
 
         jPanel59.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -2042,7 +2099,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel59, new org.netbeans.lib.awtextra.AbsoluteConstraints(1030, 250, 70, 67));
+        jPanel1123123.add(jPanel59, new org.netbeans.lib.awtextra.AbsoluteConstraints(1030, 250, 70, 67));
 
         jPanel47.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -2064,7 +2121,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel47, new org.netbeans.lib.awtextra.AbsoluteConstraints(1210, 90, 70, 67));
+        jPanel1123123.add(jPanel47, new org.netbeans.lib.awtextra.AbsoluteConstraints(1210, 90, 70, 67));
 
         jPanel43.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -2086,7 +2143,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel43, new org.netbeans.lib.awtextra.AbsoluteConstraints(940, 10, 70, -1));
+        jPanel1123123.add(jPanel43, new org.netbeans.lib.awtextra.AbsoluteConstraints(940, 10, 70, -1));
 
         jPanel60.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -2108,7 +2165,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel60, new org.netbeans.lib.awtextra.AbsoluteConstraints(940, 250, 70, 67));
+        jPanel1123123.add(jPanel60, new org.netbeans.lib.awtextra.AbsoluteConstraints(940, 250, 70, 67));
 
         jPanel57.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -2130,7 +2187,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel57, new org.netbeans.lib.awtextra.AbsoluteConstraints(1210, 250, 70, 67));
+        jPanel1123123.add(jPanel57, new org.netbeans.lib.awtextra.AbsoluteConstraints(1210, 250, 70, 67));
 
         jPanel70.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -2152,7 +2209,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel70, new org.netbeans.lib.awtextra.AbsoluteConstraints(940, 410, 70, 67));
+        jPanel1123123.add(jPanel70, new org.netbeans.lib.awtextra.AbsoluteConstraints(940, 410, 70, 67));
 
         jPanel76.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -2174,7 +2231,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 .addGap(0, 50, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel76, new org.netbeans.lib.awtextra.AbsoluteConstraints(1210, 490, 70, 67));
+        jPanel1123123.add(jPanel76, new org.netbeans.lib.awtextra.AbsoluteConstraints(1210, 490, 70, 67));
 
         createFile.setText("Crear Archivo");
         createFile.addActionListener(new java.awt.event.ActionListener() {
@@ -2182,7 +2239,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 createFileActionPerformed(evt);
             }
         });
-        jPanel1.add(createFile, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 650, 120, -1));
+        jPanel1123123.add(createFile, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 650, 120, -1));
 
         createDir.setText("Crear Directorio");
         createDir.addActionListener(new java.awt.event.ActionListener() {
@@ -2190,7 +2247,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 createDirActionPerformed(evt);
             }
         });
-        jPanel1.add(createDir, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 650, -1, -1));
+        jPanel1123123.add(createDir, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 650, -1, -1));
 
         change.setText("Cambiar de Modo");
         change.addActionListener(new java.awt.event.ActionListener() {
@@ -2198,26 +2255,26 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 changeActionPerformed(evt);
             }
         });
-        jPanel1.add(change, new org.netbeans.lib.awtextra.AbsoluteConstraints(395, 650, 140, -1));
+        jPanel1123123.add(change, new org.netbeans.lib.awtextra.AbsoluteConstraints(395, 650, 140, -1));
 
         modo.setText("Actual: Administrador");
-        jPanel1.add(modo, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 680, -1, -1));
+        jPanel1123123.add(modo, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 680, -1, -1));
 
         javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("root");
         Tree.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
         jScrollPane3.setViewportView(Tree);
 
-        jPanel1.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 380, 330));
+        jPanel1123123.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 380, 330));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1316, Short.MAX_VALUE)
+            .addComponent(jPanel1123123, javax.swing.GroupLayout.DEFAULT_SIZE, 1316, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 730, Short.MAX_VALUE)
+            .addComponent(jPanel1123123, javax.swing.GroupLayout.DEFAULT_SIZE, 730, Short.MAX_VALUE)
         );
 
         pack();
@@ -2279,7 +2336,15 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FileSystemSimulator().setVisible(true);
+                try {
+                    new FileSystemSimulator().setVisible(true);
+                } catch (NoSuchFieldException ex) {
+                    Logger.getLogger(FileSystemSimulator.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IllegalArgumentException ex) {
+                    Logger.getLogger(FileSystemSimulator.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IllegalAccessException ex) {
+                    Logger.getLogger(FileSystemSimulator.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
@@ -2373,6 +2438,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel11;
+    private javax.swing.JPanel jPanel1123123;
     private javax.swing.JPanel jPanel12;
     private javax.swing.JPanel jPanel13;
     private javax.swing.JPanel jPanel14;
@@ -2406,7 +2472,6 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel40;
     private javax.swing.JPanel jPanel41;
-    private javax.swing.JPanel jPanel42;
     private javax.swing.JPanel jPanel43;
     private javax.swing.JPanel jPanel44;
     private javax.swing.JPanel jPanel45;
