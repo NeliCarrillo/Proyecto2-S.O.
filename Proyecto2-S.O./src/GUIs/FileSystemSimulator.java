@@ -5,6 +5,7 @@
 package GUIs;
 
 import EDD.Lista;
+import Objetos.Archivo;
 import Objetos.ColorCellRenderer;
 import java.awt.Color;
 import java.util.Random;
@@ -59,7 +60,8 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
     
     public void nuevoArchivo(String nombreArchivo, String nombrePadre,int tamano){
         boolean seAgrego = this.anadirArchivoJTree(nombrePadre, nombreArchivo);
-        this.anadirArchivoJTable(seAgrego, nombreArchivo);
+        Archivo nuvo = new Archivo(nombreArchivo,tamano,nombrePadre);
+        this.anadirArchivoJTable(seAgrego,nuvo );
     }
     
     /**
@@ -70,7 +72,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
     * @param re           Indica si se debe añadir el archivo a la tabla. Si es `true`, se añade la fila.
     * @param nombreArchivo El nombre del archivo que se desea añadir a la tabla.
     */ 
-    public void anadirArchivoJTable(boolean re, String nombreArchivo){
+    public void anadirArchivoJTable(boolean re, Archivo nue){
         if (re) {
             DefaultTableModel modeloTabla = (DefaultTableModel) Tabla.getModel();
             Tabla.getColumnModel().getColumn(3).setCellRenderer(new ColorCellRenderer());
@@ -83,7 +85,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
             Color colorArchivo = new Color(r, g, b);
 
             // Crear un arreglo con los datos de la nueva fila
-            Object[] nuevaFila = {nombreArchivo, 1, 1, colorArchivo};
+            Object[] nuevaFila = {nue.getNombre(), 1, nue.getTamaño(), colorArchivo};
 
             // Agregar la fila al modelo de la tabla
             modeloTabla.addRow(nuevaFila);
@@ -125,6 +127,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
            return false; // Nodo padre no existe
        }
    }
+   
    /**
     * Método para añadir un nuevo directorio (nodo) con un hijo predeterminado vacío.
     *

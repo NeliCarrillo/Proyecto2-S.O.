@@ -14,12 +14,14 @@ public class Archivo {
     private int tamaño; // Tamaño en bloques
     private int direccionPrimerBloque;
     private String color=""; // Opcional
+    private String directorio;
     
     
     // Constructor
-    public Archivo(String nombre, int tamaño) {
+    public Archivo(String nombre, int tamaño,String directori) {
         this.nombre = nombre;
         this.tamaño = tamaño;
+        this.directorio=directori;
     }
     
     // Constructor
@@ -48,6 +50,14 @@ public class Archivo {
 
     public int getTamaño() {
         return tamaño;
+    }
+
+    public String getDirectorio() {
+        return directorio;
+    }
+
+    public void setDirectorio(String directorio) {
+        this.directorio = directorio;
     }
 
     public void setTamaño(int tamaño) {
