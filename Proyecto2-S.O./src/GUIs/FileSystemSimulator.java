@@ -72,12 +72,11 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
     }
     
     /**
-    * Método para añadir una fila a un JTable con un archivo y un color aleatorio.
-    * Si el parámetro `re` es verdadero, se añade una nueva fila al JTable con el nombre del archivo
-    * y un color aleatorio en la columna correspondiente.
+    * Método para añadir una fila a un JTable con un archivo y un color aleatorio.Si el parámetro `re` es verdadero, se añade una nueva fila al JTable con el nombre del archivo
+ y un color aleatorio en la columna correspondiente.
     *
     * @param re           Indica si se debe añadir el archivo a la tabla. Si es `true`, se añade la fila.
-    * @param nombreArchivo El nombre del archivo que se desea añadir a la tabla.
+     * @param nue
     */ 
     public void anadirArchivoJTable(boolean re, Archivo nue){
         // Generar un color aleatorio
