@@ -34,7 +34,7 @@ public class CrearArchivo extends javax.swing.JFrame {
     
     private void actualizarDir(){
         Lista direc = this.sim.getDirectorios();
-        Nodo cabeza = direc.getPrimero();
+        Nodo cabeza = direc.getUltimo();
         while(cabeza!=null){
             this.directorio.addItem((String)cabeza.getDato());
             cabeza=cabeza.getSiguiente();
