@@ -53,8 +53,6 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
         this.setResizable(false);
         LoadRoot("FileSystem");
         this.nextAvailablePanel=1;
-        this.addFile(12, 100, 100, 100);
-        this.addFile(3, 200, 200, 200);
     }
     
     public void LoadRoot(String n){
@@ -82,22 +80,23 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
     * @param nombreArchivo El nombre del archivo que se desea añadir a la tabla.
     */ 
     public void anadirArchivoJTable(boolean re, Archivo nue){
-        if (re) {
+        // Generar un color aleatorio
+        Random rand = new Random();
+        int r = rand.nextInt(256); // Componente rojo (0-255)
+        int g = rand.nextInt(256); // Componente verde (0-255)
+        int b = rand.nextInt(256); // Componente azul (0-255)
+        Color colorArchivo = new Color(r, g, b);
+        boolean se = this.addFile(nue.getTamaño(), r, g, b);
+        if (re&&se) {
             DefaultTableModel modeloTabla = (DefaultTableModel) Tabla.getModel();
             Tabla.getColumnModel().getColumn(3).setCellRenderer(new ColorCellRenderer());
-
-            // Generar un color aleatorio
-            Random rand = new Random();
-            int r = rand.nextInt(256); // Componente rojo (0-255)
-            int g = rand.nextInt(256); // Componente verde (0-255)
-            int b = rand.nextInt(256); // Componente azul (0-255)
-            Color colorArchivo = new Color(r, g, b);
 
             // Crear un arreglo con los datos de la nueva fila
             Object[] nuevaFila = {nue.getNombre(), 1, nue.getTamaño(), colorArchivo};
 
             // Agregar la fila al modelo de la tabla
             modeloTabla.addRow(nuevaFila);
+            
         }
     }
     
@@ -220,10 +219,10 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
         return null;
     }
     
-    public void addFile(int fileSize, int r, int g, int b) {
-        if (fileSize > 50 || nextAvailablePanel + fileSize - 1 > 50) {
+    public boolean addFile(int fileSize, int r, int g, int b) {
+        if (fileSize > 80 || nextAvailablePanel + fileSize - 1 > 80) {
             JOptionPane.showMessageDialog(this, "No hay suficiente espacio para el archivo.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
+            return false;
         }
 
         Color color = new Color(r, g, b);
@@ -239,6 +238,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 e.printStackTrace();
             }
         }
+        
 
         // Actualizar el siguiente JPanel disponible
         nextAvailablePanel += fileSize;
@@ -246,11 +246,12 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
         // Repintar el JFrame para reflejar los cambios
         this.revalidate();
         this.repaint();
+        return true;
     }
 
     public void resetFileSystem() {
         // Reiniciar todos los JPanels a blanco y resetear el contador
-        for (int i = 1; i <= 50; i++) {
+        for (int i = 1; i <= 80; i++) {
             try {
                 Field field = this.getClass().getDeclaredField("jPanel" + i);
                 field.setAccessible(true);
