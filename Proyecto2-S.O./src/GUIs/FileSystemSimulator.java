@@ -29,7 +29,6 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
     private DefaultTreeModel model;
     private final Lista directorios = new Lista();
     private Lista archivos = new Lista();
-    private int nextAvailablePanel; // Lleva la cuenta del siguiente JPanel disponible
 
 
     public String getMode() {
@@ -57,7 +56,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         this.setResizable(false);
         LoadRoot("FileSystem");
-        this.nextAvailablePanel=1;
+        this.Tree.setEditable(false);
     }
     
     public void LoadRoot(String n){
@@ -97,15 +96,15 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
         Color colorArchivo = new Color(r, g, b);
         int se = this.addFile(nue.getTamaño(), r, g, b);
         if (re&&(se!=100)) {
+            nue.setDireccionPrimerBloque(se);
             DefaultTableModel modeloTabla = (DefaultTableModel) Tabla.getModel();
             Tabla.getColumnModel().getColumn(3).setCellRenderer(new ColorCellRenderer());
 
             // Crear un arreglo con los datos de la nueva fila
-            Object[] nuevaFila = {nue.getNombre(),se, nue.getTamaño(), colorArchivo};
+            Object[] nuevaFila = {nue.getNombre(),nue.getDireccionPrimerBloque(), nue.getTamaño(), colorArchivo};
 
             // Agregar la fila al modelo de la tabla
             modeloTabla.addRow(nuevaFila);
-            nue.setDireccionPrimerBloque(se);
             this.archivos.agregar(nue);
             nue.setColor(colorArchivo);
         }
@@ -156,7 +155,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                    return false; // No se puede añadir, ya existe un hijo con ese nombre
                }
            }
-           if (fileSize > 80 || nextAvailablePanel + fileSize - 1 > 80) {
+           if (this.findFreePanels(fileSize)==-1) {
                 JOptionPane.showMessageDialog(this, "No hay suficiente espacio para el archivo.", "Error", JOptionPane.ERROR_MESSAGE);
                 return false;
            }
@@ -274,16 +273,6 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 setPanelColor(i, color);
             }
             return startPanel;
-        } else if (nextAvailablePanel + fileSize - 1 <= 80) {
-            // Si no hay paneles libres, usar los siguientes disponibles
-            for (int i = nextAvailablePanel; i < nextAvailablePanel + fileSize; i++) {
-                setPanelColor(i, color);
-            }
-            int aux = nextAvailablePanel;
-            nextAvailablePanel += fileSize;
-            this.revalidate();
-            this.repaint();
-            return aux;
         } else {
             JOptionPane.showMessageDialog(this, "No hay suficiente espacio para el archivo.", "Error", JOptionPane.ERROR_MESSAGE);
             return 100; // Código de error
@@ -360,8 +349,6 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 e.printStackTrace();
             }
         }
-        nextAvailablePanel = 1; // Reiniciar el contador
-
         // Repintar el JFrame para reflejar los cambios
         this.revalidate();
         this.repaint();
