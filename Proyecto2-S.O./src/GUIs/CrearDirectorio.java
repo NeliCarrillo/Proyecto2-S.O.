@@ -26,7 +26,7 @@ public class CrearDirectorio extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         this.setResizable(false);
         this.actualizarDir();
-                this.sim.disable();
+        this.sim.disable();
     }
 
     private CrearDirectorio() {
@@ -34,6 +34,15 @@ public class CrearDirectorio extends javax.swing.JFrame {
     }
     
     private void actualizarDir(){
+        Lista direc = this.sim.getDirectorios();
+        Nodo cabeza = direc.getPrimero();
+        while(cabeza!=null){
+            this.directorio.addItem((String)cabeza.getDato());
+            cabeza=cabeza.getSiguiente();
+        }
+    }
+    
+    private void actualizarDirDur(){
         Lista direc = this.sim.getDirectorios();
         Nodo cabeza = direc.getUltimo();
         while(cabeza!=null){
@@ -138,14 +147,14 @@ public class CrearDirectorio extends javax.swing.JFrame {
         this.sim.enable();
         this.nombre.setText("");
         this.setVisible(false);
-        this.actualizarDir();
+        this.actualizarDirDur();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         this.sim.anadirDirectorio(this.directorio.getSelectedItem().toString(), this.nombre.getText());
         this.nombre.setText("");
-        this.actualizarDir();
+        this.actualizarDirDur();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     /**

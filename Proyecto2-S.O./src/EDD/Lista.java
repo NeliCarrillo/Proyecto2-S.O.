@@ -4,6 +4,8 @@
  */
 package EDD;
 
+import Objetos.Archivo;
+
 /**
  *
  * @author nelsoncarrillo
@@ -96,5 +98,44 @@ public class Lista<T> {
             actual = actual.getSiguiente();
         }
         return contador;
+    }
+    
+    // Método para eliminar un archivo por su nombre
+    public void eliminarArchivo(String nombre) {
+        if (estaVacia()) {
+            System.out.println("La lista está vacía, no se puede eliminar.");
+            return;
+        }
+
+        Nodo<T> actual = primero;
+        Nodo<T> anterior = null;
+
+        // Recorrer la lista para encontrar el archivo con el nombre especificado
+        while (actual != null) {
+            Archivo archivo = (Archivo) actual.getDato();
+            if (archivo.getNombre().equals(nombre)) {
+                // Si el archivo es el primero
+                if (anterior == null) {
+                    primero = actual.getSiguiente();
+                    // Si el archivo es también el último
+                    if (primero == null) {
+                        ultimo = null;
+                    }
+                } else {
+                    // Si el archivo no es el primero
+                    anterior.setSiguiente(actual.getSiguiente());
+                    // Si el archivo es el último
+                    if (actual.getSiguiente() == null) {
+                        ultimo = anterior;
+                    }
+                }
+                System.out.println("Archivo eliminado: " + archivo.getNombre());
+                return;
+            }
+            anterior = actual;
+            actual = actual.getSiguiente();
+        }
+
+        System.out.println("Archivo no encontrado: " + nombre);
     }
 }

@@ -28,6 +28,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
     private String mode="Administrador";
     private DefaultTreeModel model;
     private final Lista directorios = new Lista();
+    private Lista archivos = new Lista();
     private int nextAvailablePanel; // Lleva la cuenta del siguiente JPanel disponible
 
 
@@ -95,7 +96,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
 
             // Agregar la fila al modelo de la tabla
             modeloTabla.addRow(nuevaFila);
-            
+            this.archivos.agregar(nue);
         }
     }
     
