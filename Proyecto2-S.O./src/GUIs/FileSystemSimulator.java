@@ -85,6 +85,11 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
         int r = rand.nextInt(256); // Componente rojo (0-255)
         int g = rand.nextInt(256); // Componente verde (0-255)
         int b = rand.nextInt(256); // Componente azul (0-255)
+        while(r==255 && g==255 && b ==255){
+            r = rand.nextInt(256); // Componente rojo (0-255)
+            g = rand.nextInt(256); // Componente verde (0-255)
+            b = rand.nextInt(256); // Componente azul (0-255)
+        }
         Color colorArchivo = new Color(r, g, b);
         int se = this.addFile(nue.getTamaño(), r, g, b);
         if (re&&(se!=100)) {
@@ -226,33 +231,76 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
     }
     
     public int addFile(int fileSize, int r, int g, int b) {
-        if (fileSize > 80 || nextAvailablePanel + fileSize - 1 > 80) {
-            JOptionPane.showMessageDialog(this, "No hay suficiente espacio para el archivo.", "Error", JOptionPane.ERROR_MESSAGE);
-            return 100;
+        if (fileSize > 80) {
+            JOptionPane.showMessageDialog(this, "El tamaño del archivo excede el límite de 80 paneles.", "Error", JOptionPane.ERROR_MESSAGE);
+            return 100; // Código de error
         }
 
         Color color = new Color(r, g, b);
 
-        // Colorear los JPanels correspondientes al archivo
-        for (int i = nextAvailablePanel; i < nextAvailablePanel + fileSize; i++) {
-            try {
-                Field field = this.getClass().getDeclaredField("Panel" + i);
-                field.setAccessible(true);
-                JPanel panel = (JPanel) field.get(this);
-                panel.setBackground(color);
-            } catch (Exception e) {
-                e.printStackTrace();
+        // Buscar paneles libres (con fondo blanco)
+        int startPanel = findFreePanels(fileSize);
+        if (startPanel != -1) {
+            // Si se encontraron paneles libres, usarlos
+            for (int i = startPanel; i < startPanel + fileSize; i++) {
+                setPanelColor(i, color);
+            }
+            return startPanel;
+        } else if (nextAvailablePanel + fileSize - 1 <= 80) {
+            // Si no hay paneles libres, usar los siguientes disponibles
+            for (int i = nextAvailablePanel; i < nextAvailablePanel + fileSize; i++) {
+                setPanelColor(i, color);
+            }
+            int aux = nextAvailablePanel;
+            nextAvailablePanel += fileSize;
+            this.revalidate();
+            this.repaint();
+            return aux;
+        } else {
+            JOptionPane.showMessageDialog(this, "No hay suficiente espacio para el archivo.", "Error", JOptionPane.ERROR_MESSAGE);
+            return 100; // Código de error
+        }
+    }
+    
+    // Método para buscar paneles libres consecutivos
+    private int findFreePanels(int fileSize) {
+        int consecutiveFreePanels = 0;
+        for (int i = 1; i < 81; i++) {
+            if (isPanelFree(i)) {
+                consecutiveFreePanels++;
+                if (consecutiveFreePanels == fileSize) {
+                    return i - fileSize + 1; // Devuelve el índice inicial del bloque libre
+                }
+            } else {
+                consecutiveFreePanels = 0;
             }
         }
-        
-
-        // Actualizar el siguiente JPanel disponible
-        int aux = nextAvailablePanel;
-        nextAvailablePanel += fileSize;
-        // Repintar el JFrame para reflejar los cambios
-        this.revalidate();
-        this.repaint();
-        return aux;
+        return -1; // No se encontró un bloque de paneles libres
+    }
+    
+    // Método para verificar si un panel está libre (fondo blanco)
+    private boolean isPanelFree(int panelIndex) {
+        try {
+            Field field = this.getClass().getDeclaredField("Panel" + panelIndex);
+            field.setAccessible(true);
+            JPanel panel = (JPanel) field.get(this);
+            return panel.getBackground().equals(new Color(255, 255, 255)); // Fondo blanco
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    // Método para cambiar el color de un panel
+    private void setPanelColor(int panelIndex, Color color) {
+        try {
+            Field field = this.getClass().getDeclaredField("Panel" + panelIndex);
+            field.setAccessible(true);
+            JPanel panel = (JPanel) field.get(this);
+            panel.setBackground(color);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void resetFileSystem() {
