@@ -66,7 +66,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
     }
     
     public void nuevoArchivo(String nombreArchivo, String nombrePadre,int tamano){
-        boolean seAgrego = this.anadirArchivoJTree(nombrePadre, nombreArchivo);
+        boolean seAgrego = this.anadirArchivoJTree(nombrePadre, nombreArchivo,tamano);
         Archivo nuvo = new Archivo(nombreArchivo,tamano,nombrePadre);
         this.anadirArchivoJTable(seAgrego,nuvo );
     }
@@ -85,13 +85,13 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
         int g = rand.nextInt(256); // Componente verde (0-255)
         int b = rand.nextInt(256); // Componente azul (0-255)
         Color colorArchivo = new Color(r, g, b);
-        boolean se = this.addFile(nue.getTamaño(), r, g, b);
-        if (re&&se) {
+        int se = this.addFile(nue.getTamaño(), r, g, b);
+        if (re&&(se!=100)) {
             DefaultTableModel modeloTabla = (DefaultTableModel) Tabla.getModel();
             Tabla.getColumnModel().getColumn(3).setCellRenderer(new ColorCellRenderer());
 
             // Crear un arreglo con los datos de la nueva fila
-            Object[] nuevaFila = {nue.getNombre(), 1, nue.getTamaño(), colorArchivo};
+            Object[] nuevaFila = {nue.getNombre(),se, nue.getTamaño(), colorArchivo};
 
             // Agregar la fila al modelo de la tabla
             modeloTabla.addRow(nuevaFila);
@@ -107,7 +107,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
     * @param nombreArchivo El nombre del archivo que se añadirá como hoja.
     * @return true si el archivo se añadió correctamente, false si ya existe un hijo con el mismo nombre.
     */
-   public boolean anadirArchivoJTree(String nombrePadre, String nombreArchivo) {
+   public boolean anadirArchivoJTree(String nombrePadre, String nombreArchivo, int fileSize) {
         
        this.eliminarArchivoJTree(nombrePadre,"");
        DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
@@ -122,6 +122,12 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                    return false; // No se puede añadir, ya existe un hijo con ese nombre
                }
            }
+           if (fileSize > 80 || nextAvailablePanel + fileSize - 1 > 80) {
+                JOptionPane.showMessageDialog(this, "No hay suficiente espacio para el archivo.", "Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+           }
+           
+           
 
            // Si no existe un hijo con el mismo nombre, añadir el nuevo archivo
            DefaultMutableTreeNode newFileNode = new DefaultMutableTreeNode(nombreArchivo);
@@ -218,10 +224,10 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
         return null;
     }
     
-    public boolean addFile(int fileSize, int r, int g, int b) {
+    public int addFile(int fileSize, int r, int g, int b) {
         if (fileSize > 80 || nextAvailablePanel + fileSize - 1 > 80) {
             JOptionPane.showMessageDialog(this, "No hay suficiente espacio para el archivo.", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
+            return 100;
         }
 
         Color color = new Color(r, g, b);
@@ -240,12 +246,12 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
         
 
         // Actualizar el siguiente JPanel disponible
+        int aux = nextAvailablePanel;
         nextAvailablePanel += fileSize;
-
         // Repintar el JFrame para reflejar los cambios
         this.revalidate();
         this.repaint();
-        return true;
+        return aux;
     }
 
     public void resetFileSystem() {
