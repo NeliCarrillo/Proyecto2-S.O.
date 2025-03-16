@@ -39,6 +39,10 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
     public Lista getDirectorios() {
         return directorios;
     }
+    
+    public Lista getArchivos() {
+        return archivos;
+    }
 
     public void setMode(String mode) {
         this.mode = mode;
@@ -101,7 +105,31 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
 
             // Agregar la fila al modelo de la tabla
             modeloTabla.addRow(nuevaFila);
+            nue.setDireccionPrimerBloque(se);
             this.archivos.agregar(nue);
+            nue.setColor(colorArchivo);
+        }
+    }
+    
+    public void eliminarArchivoJTable(Archivo archivo) {
+        DefaultTableModel modeloTabla = (DefaultTableModel) Tabla.getModel();
+
+        // Recorrer las filas de la tabla
+        for (int i = 0; i < modeloTabla.getRowCount(); i++) {
+            String nombre = (String) modeloTabla.getValueAt(i, 0); // Columna del nombre
+            int tamaño = (int) modeloTabla.getValueAt(i, 2); // Columna del tamaño
+            Color color = (Color) modeloTabla.getValueAt(i, 3); // Columna del color
+
+            // Comparar los atributos del archivo con los de la fila actual
+            if (nombre.equals(archivo.getNombre()) && 
+                tamaño == archivo.getTamaño() && 
+                color.equals(archivo.getColor())) {
+
+                // Eliminar la fila del modelo de la tabla
+                modeloTabla.removeRow(i);
+
+                break; // Salir del bucle una vez eliminado el archivo
+            }
         }
     }
     
@@ -269,6 +297,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
             if (isPanelFree(i)) {
                 consecutiveFreePanels++;
                 if (consecutiveFreePanels == fileSize) {
+                    System.out.println(i - fileSize + 1);
                     return i - fileSize + 1; // Devuelve el índice inicial del bloque libre
                 }
             } else {
@@ -289,6 +318,22 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
             e.printStackTrace();
             return false;
         }
+    }
+    
+    public void eliminarArchivo(String nombreArchivo,String nombreDirectorio) {
+        Archivo archivo = this.archivos.encontrarArchivo(nombreArchivo, nombreDirectorio);
+        this.archivos.eliminarArchivo(nombreArchivo,nombreDirectorio);
+        // Obtener la dirección del primer bloque y el tamaño del archivo
+        int direccionPrimerBloque = archivo.getDireccionPrimerBloque();
+        int tamano = archivo.getTamaño();
+
+        // Cambiar el color de los paneles asociados al archivo a blanco (255, 255, 255)
+        for (int i = direccionPrimerBloque; i < direccionPrimerBloque + tamano; i++) {
+            setPanelColor(i, new Color(255, 255, 255)); // Fondo blanco
+        }
+        this.eliminarArchivoJTree(nombreDirectorio, nombreArchivo);
+        this.eliminarArchivoJTable(archivo);
+        System.out.println("Archivo eliminado y paneles liberados: " + archivo.getNombre());
     }
     
     // Método para cambiar el color de un panel
@@ -502,6 +547,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
         modo = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         Tree = new javax.swing.JTree();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -2294,7 +2340,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 createFileActionPerformed(evt);
             }
         });
-        jPanel1123123.add(createFile, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 650, 120, -1));
+        jPanel1123123.add(createFile, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 650, 130, -1));
 
         createDir.setText("Crear Directorio");
         createDir.addActionListener(new java.awt.event.ActionListener() {
@@ -2302,7 +2348,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 createDirActionPerformed(evt);
             }
         });
-        jPanel1123123.add(createDir, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 650, -1, -1));
+        jPanel1123123.add(createDir, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 650, -1, -1));
 
         change.setText("Cambiar de Modo");
         change.addActionListener(new java.awt.event.ActionListener() {
@@ -2320,6 +2366,14 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
         jScrollPane3.setViewportView(Tree);
 
         jPanel1123123.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 380, 330));
+
+        jButton1.setText("Eliminar Archivo");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel1123123.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 690, 130, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -2359,6 +2413,11 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
         // TODO add your handling code here:
         CrearDirectorio cr = new CrearDirectorio(this);
     }//GEN-LAST:event_createDirActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        EliminarArchivo ea = new EliminarArchivo(this);
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -2490,6 +2549,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
     private javax.swing.JButton change;
     private javax.swing.JButton createDir;
     private javax.swing.JButton createFile;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;

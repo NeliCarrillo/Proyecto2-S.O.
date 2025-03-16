@@ -4,6 +4,8 @@
  */
 package Objetos;
 
+import java.awt.Color;
+
 /**
  *
  * @author nelsoncarrillo
@@ -13,7 +15,7 @@ public class Archivo {
     private String nombre;
     private int tamaño; // Tamaño en bloques
     private int direccionPrimerBloque;
-    private String color=""; // Opcional
+    private Color color;
     private String directorio;
     
     
@@ -32,7 +34,7 @@ public class Archivo {
     }
 
     // Constructor
-    public Archivo(String nombre, int tamaño, int direccionPrimerBloque, String color) {
+    public Archivo(String nombre, int tamaño, int direccionPrimerBloque, Color color) {
         this.nombre = nombre;
         this.tamaño = tamaño;
         this.direccionPrimerBloque = direccionPrimerBloque;
@@ -72,11 +74,11 @@ public class Archivo {
         this.direccionPrimerBloque = direccionPrimerBloque;
     }
 
-    public String getColor() {
+    public Color getColor() {
         return color;
     }
 
-    public void setColor(String color) {
+    public void setColor(Color color) {
         this.color = color;
     }
 

@@ -101,7 +101,7 @@ public class Lista<T> {
     }
     
     // Método para eliminar un archivo por su nombre
-    public void eliminarArchivo(String nombre) {
+    public void eliminarArchivo(String nombre,String direct) {
         if (estaVacia()) {
             System.out.println("La lista está vacía, no se puede eliminar.");
             return;
@@ -113,7 +113,7 @@ public class Lista<T> {
         // Recorrer la lista para encontrar el archivo con el nombre especificado
         while (actual != null) {
             Archivo archivo = (Archivo) actual.getDato();
-            if (archivo.getNombre().equals(nombre)) {
+            if (archivo.getNombre().equals(nombre)&&archivo.getDirectorio().equals(direct)) {
                 // Si el archivo es el primero
                 if (anterior == null) {
                     primero = actual.getSiguiente();
@@ -137,5 +137,31 @@ public class Lista<T> {
         }
 
         System.out.println("Archivo no encontrado: " + nombre);
+    }
+    
+    public Archivo encontrarArchivo(String nombreArchivo, String nombreDirectorio) {
+        if (estaVacia()) {
+            System.out.println("La lista está vacía.");
+            return null;
+        }
+
+        Nodo<T> actual = primero;
+
+        // Recorrer la lista para encontrar el archivo
+        while (actual != null) {
+            Archivo archivo = (Archivo) actual.getDato();
+
+            // Verificar si el nombre y el directorio coinciden
+            if (archivo.getNombre().equals(nombreArchivo) && archivo.getDirectorio().equals(nombreDirectorio)) {
+                System.out.println("Archivo encontrado: " + archivo.getNombre() + " en el directorio: " + archivo.getDirectorio());
+                return archivo; // Devolver el archivo encontrado
+            }
+
+            // Avanzar al siguiente nodo
+            actual = actual.getSiguiente();
+        }
+
+        System.out.println("Archivo no encontrado: " + nombreArchivo + " en el directorio: " + nombreDirectorio);
+        return null; // Si no se encuentra el archivo, devolver null
     }
 }
