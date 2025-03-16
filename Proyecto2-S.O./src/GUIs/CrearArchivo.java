@@ -6,6 +6,7 @@ package GUIs;
 
 import EDD.Lista;
 import EDD.Nodo;
+import Objetos.Directorio;
 
 /**
  *
@@ -36,7 +37,8 @@ public class CrearArchivo extends javax.swing.JFrame {
         Lista direc = this.sim.getDirectorios();
         Nodo cabeza = direc.getPrimero();
         while(cabeza!=null){
-            this.directorio.addItem((String)cabeza.getDato());
+            Directorio ac = (Directorio) cabeza.getDato();
+            this.directorio.addItem(ac.getNombre());
             cabeza=cabeza.getSiguiente();
         }
     }

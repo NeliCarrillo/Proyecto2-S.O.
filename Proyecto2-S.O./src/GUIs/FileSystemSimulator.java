@@ -7,6 +7,7 @@ package GUIs;
 import EDD.Lista;
 import Objetos.Archivo;
 import Objetos.ColorCellRenderer;
+import Objetos.Directorio;
 import java.awt.Color;
 import java.lang.reflect.Field;
 import java.util.Random;
@@ -60,13 +61,14 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
     }
     
     public void LoadRoot(String n){
+        Directorio rwy = new Directorio(n);
         DefaultMutableTreeNode raiz = new DefaultMutableTreeNode (n);
         DefaultMutableTreeNode aux = new DefaultMutableTreeNode ("");
         raiz.add(aux);
         model = (DefaultTreeModel)Tree.getModel();
         model.setRoot(raiz);
         Tree.setModel(model);
-        directorios.agregar(n);
+        directorios.agregar(rwy);
     }
     
     public void nuevoArchivo(String nombreArchivo, String nombrePadre,int tamano){
@@ -183,6 +185,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
    public void anadirDirectorio(String nombrePadre, String nombreDirectorio) {
        DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
        DefaultMutableTreeNode parentNode = findNodeJTree(root, nombrePadre);
+       Directorio nuevv = new Directorio(nombrePadre,nombreDirectorio);
 
        if (parentNode != null) {
            // Crear el nuevo directorio (nodo) con un hijo predeterminado vacío
@@ -193,7 +196,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
            // Añadir el nuevo directorio como hijo del nodo padre
            parentNode.add(nuevoDirectorio);
            model.reload(parentNode); // Actualizar el modelo para reflejar los cambios
-           directorios.agregar(nombreDirectorio); // Asume que Lista tiene un método agregar
+           directorios.agregar(nuevv); // Asume que Lista tiene un método agregar
            System.out.println("Directorio '" + nombreDirectorio + "' añadido correctamente al nodo padre '" + nombrePadre + "'.");
        } else {
            System.out.println("Error: No se encontró el nodo padre '" + nombrePadre + "'.");
