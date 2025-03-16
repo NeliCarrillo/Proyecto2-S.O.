@@ -96,7 +96,10 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
             b = rand.nextInt(256); // Componente azul (0-255)
         }
         Color colorArchivo = new Color(r, g, b);
-        int se = this.addFile(nue.getTamaño(), r, g, b);
+        int se=100;
+        if(re){
+            se = this.addFile(nue.getTamaño(), r, g, b);
+        }
         if (re&&(se!=100)) {
             nue.setDireccionPrimerBloque(se);
             DefaultTableModel modeloTabla = (DefaultTableModel) Tabla.getModel();
