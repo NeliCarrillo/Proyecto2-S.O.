@@ -147,7 +147,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
     */
    public boolean anadirArchivoJTree(String nombrePadre, String nombreArchivo, int fileSize) {
         
-       this.eliminarArchivoJTree(nombrePadre,"");
+       
        DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
        DefaultMutableTreeNode parentNode = findNodeJTree(root, nombrePadre);
 
@@ -171,6 +171,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
            DefaultMutableTreeNode newFileNode = new DefaultMutableTreeNode(nombreArchivo);
            parentNode.add(newFileNode);
            model.reload(parentNode); // Actualiza el modelo para reflejar los cambios
+           this.eliminarArchivoJTree(nombrePadre,"");
            System.out.println("Archivo '" + nombreArchivo + "' añadido correctamente al nodo padre '" + nombrePadre + "'.");
            return true; // Archivo añadido correctamente
        } else {
@@ -213,32 +214,39 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
     * @param nombreArchivo El nombre del archivo que se desea eliminar.
     */
    public void eliminarArchivoJTree(String nombrePadre, String nombreArchivo) {
-       DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
-       DefaultMutableTreeNode parentNode = findNodeJTree(root, nombrePadre);
+        DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
+        DefaultMutableTreeNode parentNode = findNodeJTree(root, nombrePadre);
 
-       if (parentNode != null) {
-           // Buscar el archivo (hoja) dentro de los hijos del nodo padre
-           DefaultMutableTreeNode nodeToDelete = null;
-           for (int i = 0; i < parentNode.getChildCount(); i++) {
-               DefaultMutableTreeNode child = (DefaultMutableTreeNode) parentNode.getChildAt(i);
-               if (child.getUserObject().equals(nombreArchivo) && child.isLeaf()) {
-                   nodeToDelete = child;
-                   break;
-               }
-           }
+        if (parentNode != null) {
+            // Buscar el archivo (hoja) dentro de los hijos del nodo padre
+            DefaultMutableTreeNode nodeToDelete = null;
+            for (int i = 0; i < parentNode.getChildCount(); i++) {
+                DefaultMutableTreeNode child = (DefaultMutableTreeNode) parentNode.getChildAt(i);
+                if (child.getUserObject().equals(nombreArchivo) && child.isLeaf()) {
+                    nodeToDelete = child;
+                    break;
+                }
+            }
 
-           if (nodeToDelete != null) {
-               // Eliminar el nodo del árbol
-               parentNode.remove(nodeToDelete);
-               model.reload(parentNode); // Actualizar el modelo para reflejar los cambios
-               System.out.println("Archivo '" + nombreArchivo + "' eliminado correctamente del nodo padre '" + nombrePadre + "'.");
-           } else {
-               System.out.println("Error: No se encontró el archivo '" + nombreArchivo + "' como hoja del nodo padre '" + nombrePadre + "'.");
-           }
-       } else {
-           System.out.println("Error: No se encontró el nodo padre '" + nombrePadre + "'.");
-       }
-   }
+            if (nodeToDelete != null) {
+                // Verificar si el nodo padre solo tiene un hijo
+                if (parentNode.getChildCount() == 1) {
+                    // Agregar un hijo vacío al nodo padre
+                    DefaultMutableTreeNode emptyNode = new DefaultMutableTreeNode("");
+                    parentNode.add(emptyNode);
+                }
+
+                // Eliminar el nodo del árbol
+                parentNode.remove(nodeToDelete);
+                model.reload(parentNode); // Actualizar el modelo para reflejar los cambios
+                System.out.println("Archivo '" + nombreArchivo + "' eliminado correctamente del nodo padre '" + nombrePadre + "'.");
+            } else {
+                System.out.println("Error: No se encontró el archivo '" + nombreArchivo + "' como hoja del nodo padre '" + nombrePadre + "'.");
+            }
+        } else {
+            System.out.println("Error: No se encontró el nodo padre '" + nombrePadre + "'.");
+        }
+    }
     
     /**
      * Método auxiliar para encontrar un nodo en el árbol por su nombre.
