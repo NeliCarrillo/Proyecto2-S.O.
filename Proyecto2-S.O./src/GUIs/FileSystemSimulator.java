@@ -275,6 +275,47 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
             System.out.println("Error: No se encontró el nodo padre '" + nombrePadre + "'.");
         }
     }
+    
+    public void editarArchivo(Archivo archivo, String nuevoNombre){
+        DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
+        DefaultMutableTreeNode parentNode = findNodeJTree(root, archivo.getDirectorio());
+
+        if (parentNode != null) {
+            // Buscar el nodo hijo que coincide con el nombre del archivo a editar
+            for (int i = 0; i < parentNode.getChildCount(); i++) {
+                DefaultMutableTreeNode hijo = (DefaultMutableTreeNode) parentNode.getChildAt(i);
+                if (hijo.getUserObject().equals(archivo.getNombre())) {
+                    // Cambiar el nombre del nodo
+                    hijo.setUserObject(nuevoNombre);
+                    model.reload(parentNode); // Actualizar el modelo para reflejar los cambios
+                    System.out.println("Nombre del archivo cambiado a '" + nuevoNombre + "' en el árbol.");
+                }
+            }
+            System.out.println("Error: No se encontró el archivo '" + archivo.getNombre() + "' en el nodo padre '" + archivo.getDirectorio() + "'.");
+        } else {
+            System.out.println("Error: No se encontró el nodo padre '" + archivo.getDirectorio() + "'.");
+        }
+        
+        DefaultTableModel modeloTabla = (DefaultTableModel) Tabla.getModel();
+
+        // Recorrer las filas de la tabla
+        for (int i = 0; i < modeloTabla.getRowCount(); i++) {
+            String nombre = (String) modeloTabla.getValueAt(i, 0); // Columna del nombre
+            int tamaño = (int) modeloTabla.getValueAt(i, 2); // Columna del tamaño
+            Color color = (Color) modeloTabla.getValueAt(i, 3); // Columna del color
+
+            // Comparar los atributos del archivo con los de la fila actual
+            if (nombre.equals(archivo.getNombre()) && 
+                tamaño == archivo.getTamaño() && 
+                color.equals(archivo.getColor())) {
+
+                // Actualizar el nombre en la fila del modelo de la tabla
+                modeloTabla.setValueAt(nuevoNombre, i, 0);
+
+                break; // Salir del bucle una vez editado el archivo
+            }
+        }
+    }
 
    /**
     * Método para eliminar un archivo (hoja) del árbol, verificando que pertenezca al nodo padre especificado.
@@ -2457,6 +2498,11 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
         jPanel1123123.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 690, 160, -1));
 
         jButton3.setText("Editar Archivo");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
         jPanel1123123.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 650, 130, -1));
 
         jButton4.setText("Editar Directorio");
@@ -2510,6 +2556,11 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
         // TODO add your handling code here:
         EliminarDirectorio ed = new EliminarDirectorio(this);
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        EditarArchivo eaa = new EditarArchivo(this);
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments

@@ -270,4 +270,31 @@ public class Lista<T> {
 
         return null; // Si no se encuentra el archivo, devolver null
     }
+    
+    public void encontrarArchivoYCambiar(String nuevoNombre,String nombreArchivo, String nombreDirectorio) {
+        if (estaVacia()) {
+            System.out.println("La lista está vacía.");
+            return;
+        }
+
+        Nodo<T> actual = primero;
+
+        // Recorrer la lista para encontrar el archivo
+        while (actual != null) {
+            Archivo archivo = (Archivo) actual.getDato();
+
+            // Verificar si el nombre y el directorio coinciden
+            if (archivo.getNombre().equals(nombreArchivo) && archivo.getDirectorio().equals(nombreDirectorio)) {
+                System.out.println("Archivo encontrado: " + archivo.getNombre() + " en el directorio: " + archivo.getDirectorio());
+                archivo.setNombre(nuevoNombre);
+                return; // Devolver el archivo encontrado
+            }
+
+            // Avanzar al siguiente nodo
+            actual = actual.getSiguiente();
+        }
+
+        System.out.println("Archivo no encontrado: " + nombreArchivo + " en el directorio: " + nombreDirectorio);
+        return; // Si no se encuentra el archivo, devolver null
+    }
 }
