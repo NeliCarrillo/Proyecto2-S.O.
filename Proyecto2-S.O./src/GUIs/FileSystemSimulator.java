@@ -8,8 +8,16 @@ import EDD.Lista;
 import EDD.Nodo;
 import Objetos.Archivo;
 import Objetos.ColorCellRenderer;
+import Objetos.Contenedor;
 import Objetos.Directorio;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.awt.Color;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Random;
 import java.util.logging.Level;
@@ -29,7 +37,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
     
     private String mode="Administrador";
     private DefaultTreeModel model;
-    private final Lista directorios = new Lista();
+    private Lista directorios = new Lista();
     private Lista archivos = new Lista();
 
 
@@ -59,6 +67,17 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
         this.setResizable(false);
         LoadRoot("FileSystem");
         this.Tree.setEditable(false);
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                // Llamar al método guardarEstado antes de cerrar
+                guardarEstado();
+
+                // Cerrar la aplicación
+                dispose(); // Cierra la ventana
+                System.exit(0); // Termina la aplicación
+            }
+        });
     }
     
     public void LoadRoot(String n){
@@ -97,6 +116,31 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
             b = rand.nextInt(256); // Componente azul (0-255)
         }
         Color colorArchivo = new Color(r, g, b);
+        int se=100;
+        if(re){
+            se = this.addFile(nue.getTamaño(), r, g, b);
+        }
+        if (re&&(se!=100)) {
+            nue.setDireccionPrimerBloque(se);
+            DefaultTableModel modeloTabla = (DefaultTableModel) Tabla.getModel();
+            Tabla.getColumnModel().getColumn(3).setCellRenderer(new ColorCellRenderer());
+
+            // Crear un arreglo con los datos de la nueva fila
+            Object[] nuevaFila = {nue.getNombre(),nue.getDireccionPrimerBloque(), nue.getTamaño(), colorArchivo};
+
+            // Agregar la fila al modelo de la tabla
+            modeloTabla.addRow(nuevaFila);
+            this.archivos.agregar(nue);
+            nue.setR(r);
+            nue.setG(g);
+            nue.setB(b);
+            nue.setColor(colorArchivo);
+        }
+    }
+    
+    
+    public void anadirArchivoJTableConColor(boolean re, Archivo nue,int r,int g,int b){
+        Color colorArchivo = new Color(r,g,b);
         int se=100;
         if(re){
             se = this.addFile(nue.getTamaño(), r, g, b);
@@ -530,6 +574,66 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
         // Repintar el JFrame para reflejar los cambios
         this.revalidate();
         this.repaint();
+    }
+    
+    public void guardarEstado() {
+        // Crear una instancia de Contenedor y llenarla con los datos actuales
+        Contenedor contenedor = new Contenedor();
+        contenedor.setArchivos(this.archivos); // Asume que this.archivos es una Lista<Archivo>
+        contenedor.setDirectorios(this.directorios); // Asume que this.directorios es una Lista<Directorio>
+
+        // Serializar el contenedor a JSON
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        try (FileWriter writer = new FileWriter("test/simulacion.json")) {
+            gson.toJson(contenedor, writer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void cargarEstado() {
+        Gson gson = new Gson();
+        try (FileReader reader = new FileReader("test/simulacion.json")) {
+            // Deserializar el JSON a una instancia de Contenedor
+            Contenedor contenedor = gson.fromJson(reader, Contenedor.class);
+
+            // Limpiar la interfaz gráfica y las listas internas antes de cargar el estado
+            DefaultTableModel modeloTabla = (DefaultTableModel) Tabla.getModel();
+            modeloTabla.setRowCount(0); // Limpiar la tabla
+            DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
+            root.removeAllChildren(); // Limpiar el JTree
+            model.reload(); // Actualizar el modelo del JTree
+
+            // Recorrer los directorios y agregarlos al JTree y a la lista interna
+            Nodo<Directorio> actualDirectorio = contenedor.getDirectorios().getPrimero();
+            while (actualDirectorio != null) {
+                Directorio directorio = actualDirectorio.getDato();
+                if(!directorio.getNombre().equals("FileSystem")){
+                                    this.anadirDirectorio(directorio.getPadre(), directorio.getNombre());
+                }
+                actualDirectorio = actualDirectorio.getSiguiente();
+            }
+
+            // Recorrer los archivos y agregarlos al JTree, JTable y a la lista interna
+            Nodo<Archivo> actualArchivo = contenedor.getArchivos().getPrimero();
+            while (actualArchivo != null) {
+                Archivo archivo = actualArchivo.getDato();
+
+                // Agregar el archivo al JTree
+                boolean seAgrego = this.anadirArchivoJTree(archivo.getDirectorio(), archivo.getNombre(), archivo.getTamaño());
+
+                // Agregar el archivo al JTable y a la lista interna
+                if (seAgrego) {
+                    this.anadirArchivoJTableConColor(true, archivo, archivo.getR(),archivo.getG(),archivo.getB());
+                }
+
+                actualArchivo = actualArchivo.getSiguiente();
+            }
+
+            System.out.println("Estado cargado correctamente.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     

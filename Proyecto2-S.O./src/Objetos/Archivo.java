@@ -15,8 +15,12 @@ public class Archivo {
     private String nombre;
     private int tamaño; // Tamaño en bloques
     private int direccionPrimerBloque;
-    private Color color;
+    private transient Color color;
+    private int colorRGB;
     private String directorio;
+     private int r; // Componente rojo
+    private int g; // Componente verde
+    private int b; // Componente azul
     
     
     // Constructor
@@ -38,6 +42,7 @@ public class Archivo {
         this.nombre = nombre;
         this.tamaño = tamaño;
         this.direccionPrimerBloque = direccionPrimerBloque;
+        this.colorRGB = color.getRGB(); // Convertir el color a RGB
         this.color = color;
     }
 
@@ -75,11 +80,30 @@ public class Archivo {
     }
 
     public Color getColor() {
-        return color;
+        return new Color(r, g, b);
     }
+    
+    public int getR() { return r; }
+    public int getG() { return g; }
+    public int getB() { return b; }
+    
+    public void setR(int rr) { this.r=rr; }
+    public void setG(int gg) { this.g=gg; }
+    public void setB(int bb) { this.b=bb; }
 
     public void setColor(Color color) {
         this.color = color;
+        this.colorRGB = color.getRGB(); // Convertir el color a RGB
+    }
+    
+    // Getters y setters
+    public int getColorRGB() {
+        return colorRGB;
+    }
+
+    public void setColorRGB(int colorRGB) {
+        this.colorRGB = colorRGB;
+        this.color = new Color(colorRGB); // Actualizar el objeto Color
     }
 
     // Método para calcular y actualizar la asignación de bloques
