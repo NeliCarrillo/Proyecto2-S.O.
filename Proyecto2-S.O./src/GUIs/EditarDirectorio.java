@@ -7,38 +7,42 @@ package GUIs;
 import EDD.Lista;
 import EDD.Nodo;
 import Objetos.Archivo;
+import Objetos.Directorio;
 
 /**
  *
  * @author nelsoncarrillo
  */
-public class EditarArchivo extends javax.swing.JFrame {
+public class EditarDirectorio extends javax.swing.JFrame {
     
     private FileSystemSimulator sim;
 
     /**
      * Creates new form EditarArchivo
      */
-    public EditarArchivo(FileSystemSimulator s) {
+    public EditarDirectorio(FileSystemSimulator s) {
         initComponents();
         this.sim=s;
         this.setVisible(true);
         this.setLocationRelativeTo(null);
         this.setResizable(false);
-        this.actualizarArchivos();
+        this.actualizarDir();
         this.sim.disable();
     }
-
-    private EditarArchivo() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    
+    /**
+     * Creates new form EditarDirectorio
+     */
+    public EditarDirectorio() {
+        initComponents();
     }
     
-    private void actualizarArchivos(){
-        Lista direc = this.sim.getArchivos();
+    private void actualizarDir(){
+        Lista direc = this.sim.getDirectorios();
         Nodo cabeza = direc.getPrimero();
         while(cabeza!=null){
-            Archivo ac = (Archivo) cabeza.getDato();
-            this.archivos.addItem(ac.getNombre()+" ("+ac.getDirectorio()+")");
+            Directorio ac = (Directorio) cabeza.getDato();
+            this.directorios.addItem(ac.getNombre()+" ("+ac.getPadre()+")");
             cabeza=cabeza.getSiguiente();
         }
     }
@@ -54,8 +58,8 @@ public class EditarArchivo extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        archivos = new javax.swing.JComboBox<>();
         jLabel2 = new javax.swing.JLabel();
+        directorios = new javax.swing.JComboBox<>();
         nombre = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
@@ -64,19 +68,14 @@ public class EditarArchivo extends javax.swing.JFrame {
 
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel1.setText("Archivo a Editar:");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 70, -1, -1));
-
-        archivos.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                archivosActionPerformed(evt);
-            }
-        });
-        jPanel1.add(archivos, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 70, 150, -1));
+        jLabel1.setText("Directorio a Editar:");
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 70, -1, -1));
 
         jLabel2.setText("Nombre:");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 120, -1, -1));
-        jPanel1.add(nombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 120, 150, -1));
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 110, -1, -1));
+
+        jPanel1.add(directorios, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 70, 140, -1));
+        jPanel1.add(nombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 110, 140, -1));
 
         jButton1.setText("Volver");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -84,7 +83,7 @@ public class EditarArchivo extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 190, -1, -1));
+        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 180, -1, -1));
 
         jButton2.setText("Confirmar");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -92,25 +91,21 @@ public class EditarArchivo extends javax.swing.JFrame {
                 jButton2ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 190, -1, -1));
+        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 180, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 412, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 467, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 252, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void archivosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_archivosActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_archivosActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
@@ -121,13 +116,13 @@ public class EditarArchivo extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        String[] partes = this.archivos.getSelectedItem().toString().split("\\("); // Usamos "\\(" para escapar el paréntesis
-        String nombreArchivo = partes[0].trim(); // Eliminar espacios en blanco al inicio y final
-        String nombreDirectorio = partes[1].substring(0, partes[1].length() - 1).trim(); 
-        Archivo archivo = this.sim.getArchivos().encontrarArchivo(nombreArchivo, nombreDirectorio);
-        this.sim.editarArchivo(archivo,this.nombre.getText());
-        this.archivos.removeAllItems();
-        this.actualizarArchivos();
+        String[] partes = this.directorios.getSelectedItem().toString().split("\\("); // Usamos "\\(" para escapar el paréntesis
+        String nombreDirectorio = partes[0].trim(); // Eliminar espacios en blanco al inicio y final
+        String nombrePadre = partes[1].substring(0, partes[1].length() - 1).trim(); 
+        this.sim.editarDirectorio(nombrePadre, nombreDirectorio, this.nombre.getText());
+        this.sim.getDirectorios().encontrarDirectorioYCambiar(this.nombre.getText(), nombreDirectorio, nombrePadre);
+        this.directorios.removeAllItems();
+        this.actualizarDir();
         this.nombre.setText("");
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -148,24 +143,26 @@ public class EditarArchivo extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(EditarArchivo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EditarDirectorio.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(EditarArchivo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EditarDirectorio.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(EditarArchivo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EditarDirectorio.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(EditarArchivo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EditarDirectorio.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> {
-            new EditarArchivo().setVisible(true);
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new EditarDirectorio().setVisible(true);
+            }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox<String> archivos;
+    private javax.swing.JComboBox<String> directorios;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;

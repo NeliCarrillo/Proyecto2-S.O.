@@ -147,7 +147,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
             while(actual!=null){
                 Archivo este = (Archivo)actual.getDato();
                 String directorio = este.getDirectorio();
-                Directorio esperado = this.directorios.encontrarDirectorio(directorio);
+                Directorio esperado = this.directorios.encontrarDirectorio(directorio,padre);
                 if(esperado==null){
                     this.eliminarArchivo(este.getNombre(), directorio);
                 }
@@ -276,11 +276,26 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
         }
     }
     
-    public void editarArchivo(Archivo archivo, String nuevoNombre){
+    public void editarArchivo(Archivo archivo, String nuevoNombre) {
         DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
         DefaultMutableTreeNode parentNode = findNodeJTree(root, archivo.getDirectorio());
 
         if (parentNode != null) {
+            // Verificar si ya existe un hijo con el nuevo nombre
+            boolean nombreRepetido = false;
+            for (int i = 0; i < parentNode.getChildCount(); i++) {
+                DefaultMutableTreeNode hijo = (DefaultMutableTreeNode) parentNode.getChildAt(i);
+                if (hijo.getUserObject().equals(nuevoNombre)) {
+                    nombreRepetido = true;
+                    break;
+                }
+            }
+
+            if (nombreRepetido) {
+                System.out.println("Error: Ya existe un archivo con el nombre '" + nuevoNombre + "' en el nodo padre '" + archivo.getDirectorio() + "'.");
+                return; // Salir del método si el nombre ya existe
+            }
+
             // Buscar el nodo hijo que coincide con el nombre del archivo a editar
             for (int i = 0; i < parentNode.getChildCount(); i++) {
                 DefaultMutableTreeNode hijo = (DefaultMutableTreeNode) parentNode.getChildAt(i);
@@ -289,13 +304,13 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                     hijo.setUserObject(nuevoNombre);
                     model.reload(parentNode); // Actualizar el modelo para reflejar los cambios
                     System.out.println("Nombre del archivo cambiado a '" + nuevoNombre + "' en el árbol.");
+                    break;
                 }
             }
-            System.out.println("Error: No se encontró el archivo '" + archivo.getNombre() + "' en el nodo padre '" + archivo.getDirectorio() + "'.");
         } else {
             System.out.println("Error: No se encontró el nodo padre '" + archivo.getDirectorio() + "'.");
         }
-        
+
         DefaultTableModel modeloTabla = (DefaultTableModel) Tabla.getModel();
 
         // Recorrer las filas de la tabla
@@ -314,6 +329,44 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
 
                 break; // Salir del bucle una vez editado el archivo
             }
+        }
+        this.archivos.encontrarArchivoYCambiar(nuevoNombre, archivo.getNombre(), archivo.getDirectorio());
+    }
+    
+    public void editarDirectorio(String nombrePadre, String nombreViejo, String nuevoNombre) {
+        DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
+        DefaultMutableTreeNode parentNode = findNodeJTree(root, nombrePadre);
+
+        if (parentNode != null) {
+            // Verificar si ya existe un hijo con el nuevo nombre
+            boolean nombreRepetido = false;
+            for (int i = 0; i < parentNode.getChildCount(); i++) {
+                DefaultMutableTreeNode hijo = (DefaultMutableTreeNode) parentNode.getChildAt(i);
+                if (hijo.getUserObject().equals(nuevoNombre)) {
+                    nombreRepetido = true;
+                    break;
+                }
+            }
+
+            if (nombreRepetido) {
+                System.out.println("Error: Ya existe un directorio con el nombre '" + nuevoNombre + "' en el nodo padre '" + nombrePadre + "'.");
+                return; // Salir del método si el nombre ya existe
+            }
+
+            // Buscar el nodo hijo que coincide con el nombre viejo del directorio
+            for (int i = 0; i < parentNode.getChildCount(); i++) {
+                DefaultMutableTreeNode hijo = (DefaultMutableTreeNode) parentNode.getChildAt(i);
+                if (hijo.getUserObject().equals(nombreViejo)) {
+                    // Cambiar el nombre del nodo
+                    hijo.setUserObject(nuevoNombre);
+                    model.reload(parentNode); // Actualizar el modelo para reflejar los cambios
+                    System.out.println("Nombre del directorio cambiado de '" + nombreViejo + "' a '" + nuevoNombre + "'.");
+                    return;
+                }
+            }
+            System.out.println("Error: No se encontró el directorio '" + nombreViejo + "' en el nodo padre '" + nombrePadre + "'.");
+        } else {
+            System.out.println("Error: No se encontró el nodo padre '" + nombrePadre + "'.");
         }
     }
 
@@ -2506,6 +2559,11 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
         jPanel1123123.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 650, 130, -1));
 
         jButton4.setText("Editar Directorio");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
         jPanel1123123.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 690, 130, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -2561,6 +2619,11 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
         // TODO add your handling code here:
         EditarArchivo eaa = new EditarArchivo(this);
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        EditarDirectorio edd = new EditarDirectorio(this);
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
      * @param args the command line arguments

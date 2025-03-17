@@ -247,7 +247,7 @@ public class Lista<T> {
         System.out.println("Archivo no encontrado: " + nombreArchivo + " en el directorio: " + nombreDirectorio);
         return null; // Si no se encuentra el archivo, devolver null
     }
-    public Directorio encontrarDirectorio(String nombreDirectorio) {
+    public Directorio encontrarDirectorio(String nombreDirectorio,String nombrePadre) {
         if (estaVacia()) {
             System.out.println("La lista está vacía.");
             return null;
@@ -260,7 +260,7 @@ public class Lista<T> {
             Directorio archivo = (Directorio) actual.getDato();
 
             // Verificar si el nombre y el directorio coinciden
-            if (archivo.getNombre().equals(nombreDirectorio) ) {
+            if (archivo.getNombre().equals(nombreDirectorio)&&archivo.getPadre().equals(nombrePadre)) {
                 return archivo; // Devolver el archivo encontrado
             }
 
@@ -295,6 +295,33 @@ public class Lista<T> {
         }
 
         System.out.println("Archivo no encontrado: " + nombreArchivo + " en el directorio: " + nombreDirectorio);
+        return; // Si no se encuentra el archivo, devolver null
+    }
+    
+    public void encontrarDirectorioYCambiar(String nuevoNombre,String nombreDirectorio, String nombrePadre) {
+        if (estaVacia()) {
+            System.out.println("La lista está vacía.");
+            return;
+        }
+
+        Nodo<T> actual = primero;
+
+        // Recorrer la lista para encontrar el archivo
+        while (actual != null) {
+            Directorio archivo = (Directorio) actual.getDato();
+
+            // Verificar si el nombre y el directorio coinciden
+            if (archivo.getNombre().equals(nombreDirectorio) && archivo.getPadre().equals(nombrePadre)) {
+                System.out.println("Directorio encontrado: " + archivo.getNombre() + " en el directorio: " + archivo.getPadre());
+                archivo.setNombre(nuevoNombre);
+                return; // Devolver el archivo encontrado
+            }
+
+            // Avanzar al siguiente nodo
+            actual = actual.getSiguiente();
+        }
+
+        System.out.println("Directorio no encontrado: " + nombreDirectorio + " en el directorio: " + nombrePadre);
         return; // Si no se encuentra el archivo, devolver null
     }
 }
