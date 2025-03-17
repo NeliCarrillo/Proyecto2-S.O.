@@ -6,39 +6,45 @@ package GUIs;
 
 import EDD.Lista;
 import EDD.Nodo;
-import Objetos.Archivo;
+import Objetos.Directorio;
 
 /**
  *
  * @author nelsoncarrillo
  */
-public class EliminarArchivo extends javax.swing.JFrame {
+public final class EliminarDirectorio extends javax.swing.JFrame {
     
     private FileSystemSimulator sim;
 
+
     /**
-     * Creates new form EliminarArchivo
+     * Creates new form EliminarDirectorio
      */
-    public EliminarArchivo(FileSystemSimulator s) {
+    public EliminarDirectorio(FileSystemSimulator s) {
         initComponents();
         this.sim=s;
         this.setVisible(true);
         this.setLocationRelativeTo(null);
         this.setResizable(false);
-        this.actualizarArchivos();
+        this.actualizarDirectorios();
         this.sim.disable();
     }
 
-    private EliminarArchivo() {
+    private EliminarDirectorio() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
-    private void actualizarArchivos(){
-        Lista direc = this.sim.getArchivos();
+    public void actualizarDirectorios(){
+        Lista direc = this.sim.getDirectorios();
         Nodo cabeza = direc.getPrimero();
+        
         while(cabeza!=null){
-            Archivo actua =(Archivo)cabeza.getDato();
-            this.directorio.addItem(actua.getNombre()+" ("+actua.getDirectorio()+")");
+            Directorio actu = (Directorio) cabeza.getDato();
+            if (actu.getPadre()!=null){
+                this.directorio.addItem(actu.getNombre()+" ("+actu.getPadre()+")");
+            }else{
+                this.directorio.addItem(actu.getNombre());
+            }
             cabeza=cabeza.getSiguiente();
         }
     }
@@ -53,14 +59,19 @@ public class EliminarArchivo extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         directorio = new javax.swing.JComboBox<>();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel1.setText("Directorio a Eliminar:");
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 60, -1, -1));
+
+        jPanel1.add(directorio, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 60, 160, -1));
 
         jButton1.setText("Volver");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -68,7 +79,7 @@ public class EliminarArchivo extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 170, 102, -1));
+        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 140, -1, -1));
 
         jButton2.setText("Eliminar");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -76,22 +87,17 @@ public class EliminarArchivo extends javax.swing.JFrame {
                 jButton2ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 170, 88, -1));
-
-        jLabel1.setText("Archivo a Eliminar:");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(42, 77, -1, -1));
-
-        jPanel1.add(directorio, new org.netbeans.lib.awtextra.AbsoluteConstraints(168, 74, 146, -1));
+        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 140, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 381, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 389, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 209, Short.MAX_VALUE)
         );
 
         pack();
@@ -106,9 +112,9 @@ public class EliminarArchivo extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         String[] partes = this.directorio.getSelectedItem().toString().split("\\("); // Usamos "\\(" para escapar el paréntesis
-        String nombreArchivo = partes[0].trim(); // Eliminar espacios en blanco al inicio y final
-        String nombreDirectorio = partes[1].substring(0, partes[1].length() - 1).trim(); // Eliminar ")" y espacios
-        this.sim.eliminarArchivo(nombreArchivo, nombreDirectorio);
+        String nombreDirectorio = partes[0].trim(); // Eliminar espacios en blanco al inicio y final
+        String nombrePadre = partes[1].substring(0, partes[1].length() - 1).trim(); 
+        //this.sim.eliminarDirectorio(nombrePadre, nombreDirectorio);
         this.sim.enable();
         this.setVisible(false);
     }//GEN-LAST:event_jButton2ActionPerformed
@@ -130,19 +136,19 @@ public class EliminarArchivo extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(EliminarArchivo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EliminarDirectorio.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(EliminarArchivo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EliminarDirectorio.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(EliminarArchivo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EliminarDirectorio.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(EliminarArchivo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EliminarDirectorio.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
-            new EliminarArchivo().setVisible(true);
+            new EliminarDirectorio().setVisible(true);
         });
     }
 

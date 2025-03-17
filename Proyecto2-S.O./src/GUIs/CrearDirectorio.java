@@ -7,6 +7,7 @@ package GUIs;
 import EDD.Lista;
 import EDD.Nodo;
 import Objetos.Directorio;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -156,9 +157,16 @@ public class CrearDirectorio extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        this.sim.anadirDirectorio(this.directorio.getSelectedItem().toString(), this.nombre.getText());
+        boolean listo =this.sim.anadirDirectorio(this.directorio.getSelectedItem().toString(), this.nombre.getText());
         this.nombre.setText("");
-        this.actualizarDirDur();
+        if(listo){
+            this.actualizarDirDur();
+        }else{
+            JOptionPane.showMessageDialog(null, 
+                "Error: Ya existe un directorio con el nombre.", 
+                "Error", 
+                JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     /**

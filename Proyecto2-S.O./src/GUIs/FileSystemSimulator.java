@@ -186,26 +186,44 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
     * @param nombrePadre El nombre del nodo padre al que se añadirá el nuevo directorio.
     * @param nombreDirectorio El nombre del nuevo directorio que se añadirá.
     */
-   public void anadirDirectorio(String nombrePadre, String nombreDirectorio) {
-       DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
-       DefaultMutableTreeNode parentNode = findNodeJTree(root, nombrePadre);
-       Directorio nuevv = new Directorio(nombrePadre,nombreDirectorio);
+   public boolean anadirDirectorio(String nombrePadre, String nombreDirectorio) {
+        DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
+        DefaultMutableTreeNode parentNode = findNodeJTree(root, nombrePadre);
+        Directorio nuevv = new Directorio(nombrePadre, nombreDirectorio);
 
-       if (parentNode != null) {
-           // Crear el nuevo directorio (nodo) con un hijo predeterminado vacío
-           DefaultMutableTreeNode nuevoDirectorio = new DefaultMutableTreeNode(nombreDirectorio);
-           DefaultMutableTreeNode hijoPredeterminado = new DefaultMutableTreeNode("");
-           nuevoDirectorio.add(hijoPredeterminado);
+        if (parentNode != null) {
+            // Verificar si ya existe un nodo con el mismo nombre en el mismo nivel
+            boolean nombreRepetido = false;
+            for (int i = 0; i < parentNode.getChildCount(); i++) {
+                DefaultMutableTreeNode hijo = (DefaultMutableTreeNode) parentNode.getChildAt(i);
+                if (hijo.getUserObject().equals(nombreDirectorio)) {
+                    nombreRepetido = true;
+                    return false;
+                }
+            }
 
-           // Añadir el nuevo directorio como hijo del nodo padre
-           parentNode.add(nuevoDirectorio);
-           model.reload(parentNode); // Actualizar el modelo para reflejar los cambios
-           directorios.agregar(nuevv); // Asume que Lista tiene un método agregar
-           System.out.println("Directorio '" + nombreDirectorio + "' añadido correctamente al nodo padre '" + nombrePadre + "'.");
-       } else {
-           System.out.println("Error: No se encontró el nodo padre '" + nombrePadre + "'.");
-       }
-   }
+            if (!nombreRepetido) {
+                // Crear el nuevo directorio (nodo) con un hijo predeterminado vacío
+                DefaultMutableTreeNode nuevoDirectorio = new DefaultMutableTreeNode(nombreDirectorio);
+                DefaultMutableTreeNode hijoPredeterminado = new DefaultMutableTreeNode("");
+                nuevoDirectorio.add(hijoPredeterminado);
+
+                // Añadir el nuevo directorio como hijo del nodo padre
+                parentNode.add(nuevoDirectorio);
+                model.reload(parentNode); // Actualizar el modelo para reflejar los cambios
+                directorios.agregar(nuevv); // Asume que Lista tiene un método agregar
+                System.out.println("Directorio '" + nombreDirectorio + "' añadido correctamente al nodo padre '" + nombrePadre + "'.");
+                this.eliminarArchivoJTree(nombrePadre,"");
+                return true;
+            } else {
+                System.out.println("Error: Ya existe un directorio con el nombre '" + nombreDirectorio + "' en el nodo padre '" + nombrePadre + "'.");
+                return false;
+            }
+        } else {
+            System.out.println("Error: No se encontró el nodo padre '" + nombrePadre + "'.");
+            return false;
+        }
+    }
 
    /**
     * Método para eliminar un archivo (hoja) del árbol, verificando que pertenezca al nodo padre especificado.
@@ -247,7 +265,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
             System.out.println("Error: No se encontró el nodo padre '" + nombrePadre + "'.");
         }
     }
-    
+   
     /**
      * Método auxiliar para encontrar un nodo en el árbol por su nombre.
      *
@@ -549,6 +567,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
         jScrollPane3 = new javax.swing.JScrollPane();
         Tree = new javax.swing.JTree();
         jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -2349,7 +2368,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 createDirActionPerformed(evt);
             }
         });
-        jPanel1123123.add(createDir, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 650, -1, -1));
+        jPanel1123123.add(createDir, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 690, 130, -1));
 
         change.setText("Cambiar de Modo");
         change.addActionListener(new java.awt.event.ActionListener() {
@@ -2357,10 +2376,10 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 changeActionPerformed(evt);
             }
         });
-        jPanel1123123.add(change, new org.netbeans.lib.awtextra.AbsoluteConstraints(395, 650, 140, -1));
+        jPanel1123123.add(change, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 650, 140, -1));
 
         modo.setText("Actual: Administrador");
-        jPanel1123123.add(modo, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 680, -1, -1));
+        jPanel1123123.add(modo, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 680, -1, -1));
 
         javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("root");
         Tree.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
@@ -2374,7 +2393,15 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-        jPanel1123123.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 690, 130, -1));
+        jPanel1123123.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 650, 160, -1));
+
+        jButton2.setText("Eliminar Directorio");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        jPanel1123123.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 690, 160, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -2419,6 +2446,11 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
         // TODO add your handling code here:
         EliminarArchivo ea = new EliminarArchivo(this);
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        EliminarDirectorio ed = new EliminarDirectorio(this);
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -2551,6 +2583,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
     private javax.swing.JButton createDir;
     private javax.swing.JButton createFile;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
