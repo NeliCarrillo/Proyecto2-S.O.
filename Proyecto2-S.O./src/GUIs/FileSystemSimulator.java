@@ -359,6 +359,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 if (hijo.getUserObject().equals(nombreViejo)) {
                     // Cambiar el nombre del nodo
                     hijo.setUserObject(nuevoNombre);
+                    this.directorios.encontrarDirectorioYCambiar(nuevoNombre, nombreViejo, nombrePadre);
                     model.reload(parentNode); // Actualizar el modelo para reflejar los cambios
                     System.out.println("Nombre del directorio cambiado de '" + nombreViejo + "' a '" + nuevoNombre + "'.");
                     return;

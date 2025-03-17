@@ -120,7 +120,6 @@ public class EditarDirectorio extends javax.swing.JFrame {
         String nombreDirectorio = partes[0].trim(); // Eliminar espacios en blanco al inicio y final
         String nombrePadre = partes[1].substring(0, partes[1].length() - 1).trim(); 
         this.sim.editarDirectorio(nombrePadre, nombreDirectorio, this.nombre.getText());
-        this.sim.getDirectorios().encontrarDirectorioYCambiar(this.nombre.getText(), nombreDirectorio, nombrePadre);
         this.directorios.removeAllItems();
         this.actualizarDir();
         this.nombre.setText("");
