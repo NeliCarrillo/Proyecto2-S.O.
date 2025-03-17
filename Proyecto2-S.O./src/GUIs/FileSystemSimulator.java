@@ -816,10 +816,10 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
         modo = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         Tree = new javax.swing.JTree();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        deleteFile = new javax.swing.JButton();
+        deleteDir = new javax.swing.JButton();
+        editFile = new javax.swing.JButton();
+        editDir = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -2639,47 +2639,47 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
 
         jPanel1123123.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 380, 330));
 
-        jButton1.setText("Eliminar Archivo");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        deleteFile.setText("Eliminar Archivo");
+        deleteFile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                deleteFileActionPerformed(evt);
             }
         });
-        jPanel1123123.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 650, 160, -1));
+        jPanel1123123.add(deleteFile, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 650, 160, -1));
 
-        jButton2.setText("Eliminar Directorio");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        deleteDir.setText("Eliminar Directorio");
+        deleteDir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                deleteDirActionPerformed(evt);
             }
         });
-        jPanel1123123.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 690, 160, -1));
+        jPanel1123123.add(deleteDir, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 690, 160, -1));
 
-        jButton3.setText("Editar Archivo");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        editFile.setText("Editar Archivo");
+        editFile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                editFileActionPerformed(evt);
             }
         });
-        jPanel1123123.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 650, 130, -1));
+        jPanel1123123.add(editFile, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 650, 130, -1));
 
-        jButton4.setText("Editar Directorio");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        editDir.setText("Editar Directorio");
+        editDir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                editDirActionPerformed(evt);
             }
         });
-        jPanel1123123.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 690, 130, -1));
+        jPanel1123123.add(editDir, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 690, 130, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1123123, javax.swing.GroupLayout.DEFAULT_SIZE, 1316, Short.MAX_VALUE)
+            .addComponent(jPanel1123123, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1123123, javax.swing.GroupLayout.DEFAULT_SIZE, 730, Short.MAX_VALUE)
+            .addComponent(jPanel1123123, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -2691,11 +2691,19 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
             this.setMode("Usuario");
             this.createDir.setVisible(false);
             this.createFile.setVisible(false);
+            this.editDir.setVisible(false);
+            this.editFile.setVisible(false);
+            this.deleteDir.setVisible(false);
+            this.deleteFile.setVisible(false);
             this.modo.setText("Actual: Usuario");
         }else{
             this.setMode("Administrador");
             this.createDir.setVisible(true);
             this.createFile.setVisible(true);
+            this.editDir.setVisible(true);
+this.editFile.setVisible(true);
+this.deleteDir.setVisible(true);
+this.deleteFile.setVisible(true);
             this.modo.setText("Actual: Administrador");
         }
     }//GEN-LAST:event_changeActionPerformed
@@ -2710,25 +2718,25 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
         CrearDirectorio cr = new CrearDirectorio(this);
     }//GEN-LAST:event_createDirActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void deleteFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteFileActionPerformed
         // TODO add your handling code here:
         EliminarArchivo ea = new EliminarArchivo(this);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_deleteFileActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void deleteDirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteDirActionPerformed
         // TODO add your handling code here:
         EliminarDirectorio ed = new EliminarDirectorio(this);
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_deleteDirActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void editFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editFileActionPerformed
         // TODO add your handling code here:
         EditarArchivo eaa = new EditarArchivo(this);
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_editFileActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void editDirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editDirActionPerformed
         // TODO add your handling code here:
         EditarDirectorio edd = new EditarDirectorio(this);
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }//GEN-LAST:event_editDirActionPerformed
 
     /**
      * @param args the command line arguments
@@ -2860,10 +2868,10 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
     private javax.swing.JButton change;
     private javax.swing.JButton createDir;
     private javax.swing.JButton createFile;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
+    private javax.swing.JButton deleteDir;
+    private javax.swing.JButton deleteFile;
+    private javax.swing.JButton editDir;
+    private javax.swing.JButton editFile;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;

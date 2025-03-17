@@ -21,19 +21,31 @@
           "r": 21,
           "g": 220,
           "b": 186
+        },
+        "siguiente": {
+          "dato": {
+            "nombre": "Cuatro",
+            "tamaño": 30,
+            "direccionPrimerBloque": 25,
+            "colorRGB": -4389791,
+            "directorio": "Dos",
+            "r": 189,
+            "g": 4,
+            "b": 97
+          }
         }
       }
     },
     "ultimo": {
       "dato": {
-        "nombre": "Tres",
-        "tamaño": 12,
-        "direccionPrimerBloque": 13,
-        "colorRGB": -15344454,
+        "nombre": "Cuatro",
+        "tamaño": 30,
+        "direccionPrimerBloque": 25,
+        "colorRGB": -4389791,
         "directorio": "Dos",
-        "r": 21,
-        "g": 220,
-        "b": 186
+        "r": 189,
+        "g": 4,
+        "b": 97
       }
     }
   },
