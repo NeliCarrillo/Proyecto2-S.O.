@@ -5,6 +5,7 @@
 package GUIs;
 
 import EDD.Lista;
+import EDD.Nodo;
 import Objetos.Archivo;
 import Objetos.ColorCellRenderer;
 import Objetos.Directorio;
@@ -137,6 +138,24 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
         }
     }
     
+    public void eliminarDirectorio(String nombre,String padre){
+        this.directorios.eliminarDirectorioDeLista(nombre, padre);
+        // Eliminar el nodo correspondiente del árbol (JTree)
+         eliminarNodoDelArbol(padre, nombre);
+        if(!archivos.estaVacia()){
+            Nodo actual = archivos.getPrimero();
+            while(actual!=null){
+                Archivo este = (Archivo)actual.getDato();
+                String directorio = este.getDirectorio();
+                Directorio esperado = this.directorios.encontrarDirectorio(directorio);
+                if(esperado==null){
+                    this.eliminarArchivo(este.getNombre(), directorio);
+                }
+                actual=actual.getSiguiente();
+            }
+        }
+    }
+    
     /**
     * Método para añadir un archivo (hoja) a un nodo padre específico.
     * Los hijos de un mismo padre no pueden tener el mismo nombre.
@@ -222,6 +241,38 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
         } else {
             System.out.println("Error: No se encontró el nodo padre '" + nombrePadre + "'.");
             return false;
+        }
+    }
+   
+    private void eliminarNodoDelArbol(String nombrePadre, String nombreDirectorio) {
+        DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
+        DefaultMutableTreeNode parentNode = findNodeJTree(root, nombrePadre);
+
+        if (parentNode != null) {
+            // Buscar el nodo hijo que coincide con el nombre del directorio a eliminar
+            for (int i = 0; i < parentNode.getChildCount(); i++) {
+                DefaultMutableTreeNode hijo = (DefaultMutableTreeNode) parentNode.getChildAt(i);
+                if (hijo.getUserObject().equals(nombreDirectorio)) {
+                    // Eliminar el nodo del árbol
+                    parentNode.remove(hijo);
+                    model.reload(parentNode); // Actualizar el modelo para reflejar los cambios
+                    System.out.println("Directorio '" + nombreDirectorio + "' eliminado del árbol.");
+
+                    // Verificar si el padre se quedó sin hijos
+                    if (parentNode.getChildCount() == 0) {
+                        // Agregar una hoja predeterminada vacía
+                        DefaultMutableTreeNode hojaPredeterminada = new DefaultMutableTreeNode("");
+                        parentNode.add(hojaPredeterminada);
+                        model.reload(parentNode); // Actualizar el modelo nuevamente
+                        System.out.println("Se agregó una hoja predeterminada al nodo padre '" + nombrePadre + "'.");
+                    }
+
+                    return;
+                }
+            }
+            System.out.println("Error: No se encontró el directorio '" + nombreDirectorio + "' en el nodo padre '" + nombrePadre + "'.");
+        } else {
+            System.out.println("Error: No se encontró el nodo padre '" + nombrePadre + "'.");
         }
     }
 
@@ -568,6 +619,8 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
         Tree = new javax.swing.JTree();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -2393,7 +2446,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-        jPanel1123123.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 650, 160, -1));
+        jPanel1123123.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 650, 160, -1));
 
         jButton2.setText("Eliminar Directorio");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -2401,7 +2454,13 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
                 jButton2ActionPerformed(evt);
             }
         });
-        jPanel1123123.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 690, 160, -1));
+        jPanel1123123.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 690, 160, -1));
+
+        jButton3.setText("Editar Archivo");
+        jPanel1123123.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 650, 130, -1));
+
+        jButton4.setText("Editar Directorio");
+        jPanel1123123.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 690, 130, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -2584,6 +2643,8 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
     private javax.swing.JButton createFile;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;

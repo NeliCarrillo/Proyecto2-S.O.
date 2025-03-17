@@ -5,6 +5,7 @@
 package EDD;
 
 import Objetos.Archivo;
+import Objetos.Directorio;
 
 /**
  *
@@ -75,7 +76,8 @@ public class Lista<T> {
         }
         Nodo<T> actual = primero;
         while (actual != null) {
-            System.out.print(actual.getDato() + " -> ");
+            Directorio actus = (Directorio) actual.getDato();
+            System.out.print( actus.getNombre()+ " -> ");
             actual = actual.getSiguiente();
         }
         System.out.println("null");
@@ -143,6 +145,83 @@ public class Lista<T> {
         System.out.println("Archivo no encontrado: " + nombre);
     }
     
+   public void eliminarDirectorioDeLista(String nombre, String direct) {
+        if (estaVacia()) {
+            System.out.println("La lista está vacía, no se puede eliminar.");
+            return;
+        }
+
+        Nodo<T> actual = primero;
+        Nodo<T> anterior = null;
+
+        // Recorrer la lista para encontrar el directorio con el nombre y padre especificados
+        while (actual != null) {
+            Directorio directorio = (Directorio) actual.getDato();
+            if (directorio.getNombre().equals(nombre) && directorio.getPadre().equals(direct)) {
+                // Eliminar todos los subdirectorios de este directorio
+                eliminarSubdirectoriosRecursivo(directorio.getNombre());
+
+                // Eliminar el directorio actual
+                if (anterior == null) {
+                    // Si es el primer nodo
+                    primero = actual.getSiguiente();
+                    if (primero == null) {
+                        ultimo = null;
+                    }
+                } else {
+                    // Si no es el primer nodo
+                    anterior.setSiguiente(actual.getSiguiente());
+                    if (actual.getSiguiente() == null) {
+                        ultimo = anterior;
+                    }
+                }
+                System.out.println("Directorio eliminado: " + directorio.getNombre());
+                return;
+            }
+            anterior = actual;
+            actual = actual.getSiguiente();
+        }
+
+        System.out.println("Directorio no encontrado: " + nombre);
+    }
+
+    private void eliminarSubdirectoriosRecursivo(String nombrePadre) {
+        if (estaVacia()) {
+            return;
+        }
+
+        Nodo<T> actual = primero;
+        Nodo<T> anterior = null;
+
+        // Recorrer la lista para encontrar y eliminar todos los subdirectorios
+        while (actual != null) {
+            Directorio directorio = (Directorio) actual.getDato();
+            if (directorio.getPadre().equals(nombrePadre)) {
+                // Eliminar recursivamente los subdirectorios de este directorio
+                eliminarSubdirectoriosRecursivo(directorio.getNombre());
+
+                // Eliminar el subdirectorio actual
+                if (anterior == null) {
+                    // Si es el primer nodo
+                    primero = actual.getSiguiente();
+                    if (primero == null) {
+                        ultimo = null;
+                    }
+                } else {
+                    // Si no es el primer nodo
+                    anterior.setSiguiente(actual.getSiguiente());
+                    if (actual.getSiguiente() == null) {
+                        ultimo = anterior;
+                    }
+                }
+                System.out.println("Subdirectorio eliminado: " + directorio.getNombre());
+            } else {
+                anterior = actual;
+            }
+            actual = actual.getSiguiente();
+        }
+    }
+    
     public Archivo encontrarArchivo(String nombreArchivo, String nombreDirectorio) {
         if (estaVacia()) {
             System.out.println("La lista está vacía.");
@@ -166,6 +245,29 @@ public class Lista<T> {
         }
 
         System.out.println("Archivo no encontrado: " + nombreArchivo + " en el directorio: " + nombreDirectorio);
+        return null; // Si no se encuentra el archivo, devolver null
+    }
+    public Directorio encontrarDirectorio(String nombreDirectorio) {
+        if (estaVacia()) {
+            System.out.println("La lista está vacía.");
+            return null;
+        }
+
+        Nodo<T> actual = primero;
+
+        // Recorrer la lista para encontrar el archivo
+        while (actual != null) {
+            Directorio archivo = (Directorio) actual.getDato();
+
+            // Verificar si el nombre y el directorio coinciden
+            if (archivo.getNombre().equals(nombreDirectorio) ) {
+                return archivo; // Devolver el archivo encontrado
+            }
+
+            // Avanzar al siguiente nodo
+            actual = actual.getSiguiente();
+        }
+
         return null; // Si no se encuentra el archivo, devolver null
     }
 }

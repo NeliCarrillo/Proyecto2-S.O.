@@ -114,7 +114,8 @@ public final class EliminarDirectorio extends javax.swing.JFrame {
         String[] partes = this.directorio.getSelectedItem().toString().split("\\("); // Usamos "\\(" para escapar el paréntesis
         String nombreDirectorio = partes[0].trim(); // Eliminar espacios en blanco al inicio y final
         String nombrePadre = partes[1].substring(0, partes[1].length() - 1).trim(); 
-        //this.sim.eliminarDirectorio(nombrePadre, nombreDirectorio);
+        this.sim.getDirectorios().mostrar();
+        this.sim.eliminarDirectorio(nombreDirectorio, nombrePadre);
         this.sim.enable();
         this.setVisible(false);
     }//GEN-LAST:event_jButton2ActionPerformed
