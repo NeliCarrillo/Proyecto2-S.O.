@@ -5,47 +5,23 @@
         "nombre": "Uno",
         "tamaño": 12,
         "direccionPrimerBloque": 1,
-        "colorRGB": -5772114,
+        "colorRGB": -9876282,
         "directorio": "FileSystem",
-        "r": 167,
-        "g": 236,
-        "b": 174
-      },
-      "siguiente": {
-        "dato": {
-          "nombre": "Tres",
-          "tamaño": 12,
-          "direccionPrimerBloque": 13,
-          "colorRGB": -15344454,
-          "directorio": "Dos",
-          "r": 21,
-          "g": 220,
-          "b": 186
-        },
-        "siguiente": {
-          "dato": {
-            "nombre": "Cuatro",
-            "tamaño": 30,
-            "direccionPrimerBloque": 25,
-            "colorRGB": -4389791,
-            "directorio": "Dos",
-            "r": 189,
-            "g": 4,
-            "b": 97
-          }
-        }
+        "r": 105,
+        "g": 76,
+        "b": 198
       }
     },
     "ultimo": {
       "dato": {
-        "nombre": "Cuatro",
-        "tamaño": 30,
-        "direccionPrimerBloque": 25,
-        "colorRGB": -4389791,
-        "directorio": "Dos",
-        "r": 189,
-        "g": 4,
-        "b": 97
+        "nombre": "Uno",
+        "tamaño": 12,
+        "direccionPrimerBloque": 1,
+        "colorRGB": -9876282,
+        "directorio": "FileSystem",
+        "r": 105,
+        "g": 76,
+        "b": 198
       }
     }
   },
@@ -60,7 +36,7 @@
       "siguiente": {
         "dato": {
           "padre": "FileSystem",
-          "nombre": "Dos",
+          "nombre": "Uw",
           "archivos": {},
           "subdirectorios": {}
         }
@@ -69,7 +45,7 @@
     "ultimo": {
       "dato": {
         "padre": "FileSystem",
-        "nombre": "Dos",
+        "nombre": "Uw",
         "archivos": {},
         "subdirectorios": {}
       }

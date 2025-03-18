@@ -183,7 +183,7 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
     }
     
     public void eliminarDirectorio(String nombre,String padre){
-        this.directorios.eliminarDirectorioDeLista(nombre, padre);
+        
         // Eliminar el nodo correspondiente del árbol (JTree)
          eliminarNodoDelArbol(padre, nombre);
         if(!archivos.estaVacia()){
@@ -191,13 +191,14 @@ public final class FileSystemSimulator extends javax.swing.JFrame {
             while(actual!=null){
                 Archivo este = (Archivo)actual.getDato();
                 String directorio = este.getDirectorio();
-                Directorio esperado = this.directorios.encontrarDirectorio(directorio,padre);
-                if(esperado==null){
+                Directorio esperado = this.directorios.encontrarDirectorio(nombre,padre);
+                if(nombre.equals(este.getDirectorio())&&padre.equals(esperado.getPadre())){
                     this.eliminarArchivo(este.getNombre(), directorio);
                 }
                 actual=actual.getSiguiente();
             }
         }
+        this.directorios.eliminarDirectorioDeLista(nombre, padre);
     }
     
     /**
